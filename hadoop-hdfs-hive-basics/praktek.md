@@ -40,6 +40,7 @@ Catatan:
 Menutup terminal hanya memutus session, cluster tetap hidup.
 
 ---
+![gambar1](gambar1.png)
 
 ## 4. Masuk ke User Hadoop
 
@@ -120,7 +121,7 @@ hdfs fsck /user/hadoop/input/nilai.csv -files -blocks -locations
 ---
 
 ## 7. Praktik Hive (Beeline)
-
+![beeline](beeline.png)
 ### 7.1 Masuk Beeline
 ```bash
 beeline
@@ -187,6 +188,8 @@ SELECT * FROM nilai ORDER BY skor DESC;
   - Menjalankan job Hive / MapReduce / Spark
 
 ---
+
+![gambar3](gambar3.png)
 
 ## 9. Penutup
 
