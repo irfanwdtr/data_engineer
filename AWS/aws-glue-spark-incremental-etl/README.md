@@ -1,6 +1,6 @@
 # AWS Glue Incremental ETL Project
 
-## 📌 Project Overview
+##  Project Overview
 
 Project ini merupakan implementasi **Incremental ETL Pipeline** menggunakan AWS Glue (Spark) untuk membangun arsitektur sederhana Data Lake dengan pendekatan Star Schema.
 
@@ -14,7 +14,7 @@ Pipeline ini melakukan:
 
 ---
 
-# 🏗 Architecture
+#  Architecture
 
 ## High Level Flow
 
@@ -32,7 +32,7 @@ Athena / BI / Analytics
 
 ---
 
-# 📂 S3 Structure
+#  S3 Structure
 
 ## Raw Layer (Landing Zone)
 
@@ -93,9 +93,9 @@ Fact table dipartition berdasarkan:
 
 ---
 
-# 🧠 ETL Logic
+#  ETL Logic
 
-## 1️⃣ Extract
+## 1️ Extract
 
 Glue membaca file berdasarkan parameter:
 
@@ -113,7 +113,7 @@ Hanya folder tanggal tersebut yang diproses (incremental).
 
 ---
 
-## 2️⃣ Transform
+## 2️ Transform
 
 ### Data Cleaning
 - Cast `order_date` menjadi tipe date
@@ -128,7 +128,7 @@ Hanya folder tanggal tersebut yang diproses (incremental).
 
 ---
 
-## 3️⃣ Dimension Tables
+## 3️ Dimension Tables
 
 ### dim_customer
 Kolom:
@@ -150,7 +150,7 @@ Disimpan dalam format Parquet (append mode).
 
 ---
 
-## 4️⃣ Fact Table
+## 4️ Fact Table
 
 Kolom utama:
 - order_id
@@ -171,7 +171,7 @@ Disimpan dengan:
 
 ---
 
-# ⚙️ Glue Job Configuration
+#  Glue Job Configuration
 
 ## Engine
 - Spark
@@ -195,7 +195,7 @@ Parameter ini menentukan folder raw mana yang akan diproses.
 
 ---
 
-# 🔁 Incremental Processing Strategy
+#  Incremental Processing Strategy
 
 Pipeline ini menggunakan pendekatan:
 
@@ -211,7 +211,7 @@ Keuntungan:
 
 ---
 
-# 📊 Data Warehouse Design
+#  Data Warehouse Design
 
 ## Star Schema
 
@@ -231,7 +231,7 @@ Dimension menyimpan atribut deskriptif.
 
 ---
 
-# 🚀 Key Concepts Implemented
+#  Key Concepts Implemented
 
 - Incremental ETL
 - Parameterized Glue Job
@@ -244,7 +244,7 @@ Dimension menyimpan atribut deskriptif.
 ---
 
 
-# 🧾 Conclusion
+#  Conclusion
 
 Project ini menunjukkan implementasi lengkap:
 
