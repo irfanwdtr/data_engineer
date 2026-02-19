@@ -2,7 +2,7 @@
 
 ## 📌 Project Overview
 
-Project ini merupakan implementasi end-to-end data pipeline menggunakan Databricks Lakehouse, dimulai dari ingestion file CSV mentah hingga penyajian dashboard KPI untuk kebutuhan Business Intelligence (BI). Tujuan utama project ini adalah membangun pipeline otomatis yang mampu membaca data penjualan (sales), melakukan transformasi, menyimpannya dalam format Delta Table, serta menyajikan visualisasi yang dapat diperbarui secara berkala melalui scheduler.
+Project ini merupakan latihan basic implementasi end-to-end data pipeline menggunakan Databricks Lakehouse, dimulai dari ingestion file CSV mentah hingga penyajian dashboard KPI untuk kebutuhan Business Intelligence (BI). Tujuan utama project ini adalah membangun pipeline otomatis yang mampu membaca data penjualan (sales), melakukan transformasi, menyimpannya dalam format Delta Table, serta menyajikan visualisasi yang dapat diperbarui secara berkala melalui scheduler.
 
 Project ini mencerminkan workflow Data Engineer modern: ingestion → transformation → storage → orchestration → visualization.
 
