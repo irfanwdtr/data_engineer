@@ -1,6 +1,6 @@
-# 📊 End-to-End Sales ETL automation scheduler & BI Project (Databricks Lakehouse)
+#  End-to-End Sales ETL automation scheduler & BI Project (Databricks Lakehouse)
 
-## 📌 Project Overview
+##  Project Overview
 
 Project ini merupakan latihan basic implementasi end-to-end data pipeline menggunakan Databricks Lakehouse, dimulai dari ingestion file CSV mentah hingga penyajian dashboard KPI untuk kebutuhan Business Intelligence (BI). Tujuan utama project ini adalah membangun pipeline otomatis yang mampu membaca data penjualan (sales), melakukan transformasi, menyimpannya dalam format Delta Table, serta menyajikan visualisasi yang dapat diperbarui secara berkala melalui scheduler.
 
@@ -8,7 +8,7 @@ Project ini mencerminkan workflow Data Engineer modern: ingestion → transforma
 
 ---
 
-## 🗂 1. Data Ingestion (Raw Layer)
+## 1. Data Ingestion (Raw Layer)
 
 Data sumber berupa file `sales.csv` diupload ke Unity Catalog Volume pada path berikut:
 
@@ -20,11 +20,11 @@ Volume berfungsi sebagai lokasi penyimpanan file mentah (raw file) sebelum dipro
 
 ---
 
-## ⚙️ 2. ETL Process (Transformation Layer)
+##  2. ETL Process (Transformation Layer)
 
 Notebook ETL dibuat untuk membaca file CSV, melakukan type casting, serta menghitung kolom revenue.
 
-### 🔹 PySpark ETL Code
+###  PySpark ETL Code
 
 ```python
 from pyspark.sql import functions as F
@@ -59,7 +59,7 @@ workspace.demo_etl.sales_raw
 
 ---
 
-## ⏱ 3. Job Orchestration (Automation)
+##  3. Job Orchestration (Automation)
 
 Notebook ETL kemudian dijalankan melalui Databricks Jobs dengan konfigurasi:
 
@@ -77,11 +77,11 @@ gambar 1 buat scheduler
 gambar 2 scheduller sukses
 ![scheduler](scheduler_succes.png)
 
-## 📈 4. BI Query Layer
+##  4. BI Query Layer
 
 Setelah data tersedia dalam Delta Table, query SQL dibuat untuk kebutuhan reporting dan dashboard.
 
-### 🔹 Daily Revenue Trend
+###  Daily Revenue Trend
 
 ```sql
 SELECT
@@ -92,7 +92,7 @@ GROUP BY order_date
 ORDER BY order_date;
 ```
 
-### 🔹 Revenue per Product
+### Revenue per Product
 
 ```sql
 SELECT
@@ -103,7 +103,7 @@ GROUP BY product
 ORDER BY revenue DESC;
 ```
 
-### 🔹 KPI Summary
+###  KPI Summary
 
 ```sql
 SELECT
@@ -118,7 +118,7 @@ FROM workspace.demo_etl.sales_raw;
 kueri :
 ![kueri](kueri.png)
 
-## 📊 5. Dashboard Creation
+## 5. Dashboard Creation
 
 Dashboard dibuat menggunakan Databricks Lakeview Dashboard.
 
@@ -142,7 +142,7 @@ Dashboard akan menampilkan data terbaru setiap kali:
 
 output dashboard
 ![dashboard](dashboard.png)
-## 🔄 6. Incremental Simulation
+##  6. Incremental Simulation
 
 Untuk simulasi data baru:
 - File `sales.csv` di-overwrite dengan data terbaru.
@@ -152,7 +152,7 @@ Untuk simulasi data baru:
 
 ---
 
-## 🏗 Final Architecture Flow
+## Final Architecture Flow
 
 ```
 Raw CSV (Unity Volume)
@@ -170,7 +170,7 @@ Lakeview Dashboard
 
 ---
 
-## 🎯 Conclusion
+##  Conclusion
 
 - Unity Catalog Volume untuk raw data storage
 - PySpark untuk transformation
