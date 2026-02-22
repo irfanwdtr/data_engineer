@@ -1,35 +1,8 @@
-# 📊 Data Warehouse Project – Pentaho PDI (MySQL)
-
-##  Overview
-
-Project ini merupakan implementasi mini Data Warehouse menggunakan **Pentaho Data Integration (PDI / Spoon)** dengan database **MySQL**.
-
-Pipeline ini membangun arsitektur **Star Schema** yang terdiri dari:
-
-- Staging Layer
-- Dimension Tables
-- Fact Table
-- Surrogate Key Lookup
-- ETL Orchestration per transformation
-
-Project ini mensimulasikan sistem transaksi retail (POS) yang diproses menjadi model analitik siap BI.
-
----
-
-#  Arsitektur Data Warehouse
-
-##  Layer 1 – Staging
-
-Source data:
-- MySQL (pos_sales)
-- CSV (promo_adjustments)
-
-Diproses menjadi:
 #  Data Warehouse Project – Pentaho PDI (MySQL)
 
 ##  Overview
 
-Project ini merupakan implementasi mini Data Warehouse menggunakan **Pentaho Data Integration (PDI / Spoon)** dengan database **MySQL**.
+Project ini merupakan implementasi **Mini Data Warehouse** menggunakan **Pentaho Data Integration (PDI / Spoon)** dengan database **MySQL**.
 
 Pipeline ini membangun arsitektur **Star Schema** yang terdiri dari:
 
@@ -37,7 +10,7 @@ Pipeline ini membangun arsitektur **Star Schema** yang terdiri dari:
 - Dimension Tables
 - Fact Table
 - Surrogate Key Lookup
-- ETL Orchestration per transformation
+- ETL Orchestration (Job)
 
 Project ini mensimulasikan sistem transaksi retail (POS) yang diproses menjadi model analitik siap BI.
 
@@ -47,15 +20,17 @@ Project ini mensimulasikan sistem transaksi retail (POS) yang diproses menjadi m
 
 ##  Layer 1 – Staging
 
-Source data:
-- MySQL (pos_sales)
-- CSV (promo_adjustments)
+### Source Data:
+- MySQL (`pos_sales`)
+- CSV (`promo_adjustments`)
 
-Diproses menjadi:
+Diproses menjadi tabel staging:
+
+```
 stg_sales_enriched
+```
 
-
-Berisi:
+### Kolom:
 - trx_id
 - trx_datetime
 - trx_date
@@ -71,10 +46,9 @@ Berisi:
 
 ---
 
-
 ##  Layer 2 – Dimension Tables
 
-###  dim_date
+### 🗓 dim_date
 | Column |
 |--------|
 | date_key (PK) |
@@ -95,7 +69,7 @@ Berisi:
 
 ---
 
-### dim_product
+###  dim_product
 | Column |
 |--------|
 | product_key (PK) |
@@ -118,7 +92,7 @@ Berisi:
 | Column |
 |--------|
 | sales_key (PK) |
-| trx_id |
+| trx_id (Unique) |
 | trx_datetime |
 | date_key (FK) |
 | customer_key (FK) |
@@ -131,11 +105,11 @@ Berisi:
 | discount_amount |
 | net_sales |
 
-Fact table menggunakan **surrogate key dari dimension table** untuk optimasi join dan performa query.
+Fact table menggunakan **surrogate key dari dimension table** untuk optimasi join dan performa query analitik.
 
 ---
 
-#  ETL Flow (Pentaho PDI)
+#  ETL Flow (Transformation Level)
 
 ## 01 – Staging Transformation
 - Read MySQL transaction data
@@ -144,42 +118,45 @@ Fact table menggunakan **surrogate key dari dimension table** untuk optimasi joi
 - Hitung gross_sales
 - Hitung discount_amount
 - Hitung net_sales
-- Generate trx_date (date only)
+- Generate trx_date
 - Load ke `stg_sales_enriched`
-- 
-![1](1.png)
+
+![1](images/1.png)
+
 ---
 
 ## 02 – Build dim_date
 - Ambil DISTINCT trx_date
-- Generate:
-  - date_key (YYYYMMDD)
-  - day, month, quarter, year
-  - month_name
-- Insert / Update ke dim_date
+- Generate date_key (YYYYMMDD)
+- Generate atribut waktu (day, month, quarter, year)
+- Insert / Update ke dim_date (Upsert)
 
-![2](2.png)
+![2](images/2.png)
+
 ---
 
 ## 03 – Build dim_customer
 - SELECT DISTINCT customer_name
 - Insert / Update ke dim_customer
-- 
-![3](3.png)
+
+![3](images/3.png)
+
 ---
 
 ## 04 – Build dim_product
 - SELECT DISTINCT product_name
 - Insert / Update ke dim_product
 
-![4](4.png)
+![4](images/4.png)
+
 ---
 
 ## 05 – Build dim_store
 - SELECT DISTINCT store_city
 - Insert / Update ke dim_store
 
-![5](5.png)
+![5](images/5.png)
+
 ---
 
 ## 06 – Build fact_sales
@@ -190,12 +167,43 @@ Fact table menggunakan **surrogate key dari dimension table** untuk optimasi joi
   - dim_store
   - dim_date
 - Retrieve surrogate keys
+- Clear fact_sales (pre-load step)
 - Load ke fact_sales
-- 
-![6](6.png)
+
+![6](images/6.png)
+
+---
+
+#  Job Orchestration (Orkestrasi ETL)
+
+Semua transformation dijalankan melalui 1 Job:
+
+```
+job_dw_pos_orchestrator.kjb
+```
+![orkes](images/orkestrasi.png)
+### Urutan Eksekusi:
+
+Start  
+→ Run 01 - Staging  
+→ Run 02 - dim_date  
+→ Run 03 - dim_customer  
+→ Run 04 - dim_product  
+→ Run 05 - dim_store  
+→ Clear fact_sales  
+→ Run 06 - fact_sales  
+→ JOB SUCCESS  
+
+Job ini bertugas untuk:
+- Mengatur urutan eksekusi
+- Menangani dependency antar layer
+- Menghindari duplicate data
+- Memastikan seluruh pipeline berjalan end-to-end dengan 1 klik
+
 ---
 
 #  Star Schema Diagram (Conceptual)
+
 ```
          dim_customer
                |
@@ -204,9 +212,7 @@ Fact table menggunakan **surrogate key dari dimension table** untuk optimasi joi
 dim_date ---- fact_sales ---- dim_store
 ```
 
-
 Fact table berada di tengah dan terhubung ke semua dimension table menggunakan foreign key.
-
 
 ---
 
@@ -215,11 +221,14 @@ Fact table berada di tengah dan terhubung ke semua dimension table menggunakan f
 ##  ETL vs ELT
 Project ini menggunakan pendekatan ETL klasik dengan Pentaho PDI.
 
-## Surrogate Key
-Semua dimension menggunakan auto-increment integer sebagai primary key.
+##  Surrogate Key
+Semua dimension menggunakan integer surrogate key sebagai primary key.
+
+##  Insert / Update (Upsert)
+Dimension table menggunakan mekanisme upsert untuk mencegah duplicate.
 
 ##  Stream Lookup
-Digunakan untuk mengganti natural key (nama) menjadi surrogate key.
+Digunakan untuk mengganti natural key menjadi surrogate key.
 
 ##  Star Schema Design
 Optimized untuk analytical query & BI reporting.
@@ -227,7 +236,23 @@ Optimized untuk analytical query & BI reporting.
 ##  Layered Architecture
 Source → Staging → Dimension → Fact
 
-![sql](sql.png)
+![sql](images/sql.png)
+
+---
+
+#  Scheduling (Production Simulation)
+
+Job dapat dijalankan melalui command line menggunakan Kitchen:
+
+```bash
+kitchen.bat /file:"path\to\job_dw_pos_orchestrator.kjb"
+```
+
+Scheduling dapat dilakukan menggunakan:
+- Windows Task Scheduler
+- Cron (Linux)
+- Jenkins / Airflow (Enterprise Environment)
+- Pentaho Server (Enterprise Edition)
 
 ---
 
@@ -238,19 +263,21 @@ Source → Staging → Dimension → Fact
 - CSV File Input
 - Stream Lookup
 - Insert / Update
-- Table Output
+- Kitchen (Command Line Runner)
+- Windows Task Scheduler (optional)
 
+---
 
+#  Project Status
 
-#  Status
+ Staging Loaded  
+ Dimensions Loaded (Upsert Enabled)  
+ Fact Table Loaded  
+ Surrogate Key Lookup Working  
+ Job Orchestration Implemented  
+ Ready for Scheduling  
 
-✅ Staging Loaded  
-✅ Dimensions Loaded  
-✅ Fact Table Loaded  
-✅ Surrogate Key Lookup Working  
-✅ Full Star Schema Implemented  
-
-Project berhasil membangun mini Data Warehouse end-to-end menggunakan Pentaho.
+Project berhasil membangun mini Data Warehouse end-to-end menggunakan Pentaho PDI dengan orkestrasi job.
 
 ---
 
