@@ -1,18 +1,18 @@
-# 📊 Mini YFinance ETL with Apache Airflow (Astro)
+#  Mini YFinance ETL with Apache Airflow (Astro)
 
-## 📌 Overview
+## Overview
 Project ini adalah mini ETL pipeline menggunakan Apache Airflow (Astro CLI).  
 Workflow ini mengambil data saham dari Yahoo Finance, menghitung return harian, lalu menyimpan hasilnya sebagai file CSV.  
 Tujuan project ini adalah memahami dasar orchestration, scheduling, dan monitoring workflow data.
 
 ---
 
-## 🔄 Workflow
+##  Workflow
 
-### 1️⃣ Extract
+### 1️ Extract
 Mengambil data saham AAPL (5 hari terakhir) menggunakan library `yfinance`.
 
-### 2️⃣ Transform
+###  Transform
 - Membersihkan kolom `Close`
 - Menghitung **daily return (%)**
 - Menghitung rata-rata harga penutupan
@@ -20,12 +20,12 @@ Mengambil data saham AAPL (5 hari terakhir) menggunakan library `yfinance`.
 Catatan:  
 Baris pertama `daily_return_%` bernilai `NaN` karena tidak ada data hari sebelumnya untuk perhitungan.
 
-### 3️⃣ Load
+###  Load
 Menyimpan hasil transformasi ke file CSV dan menampilkan preview di log Airflow.
 
 ---
 
-## 🛠 Tech Stack
+##  Tech Stack
 - Apache Airflow 3 (Astro Runtime)
 - Python
 - Pandas
@@ -34,7 +34,7 @@ Menyimpan hasil transformasi ke file CSV dan menampilkan preview di log Airflow.
 
 ---
 
-## ▶️ Cara Menjalankan
+##  Cara Menjalankan
 
 ### Start Airflow
 ```bash
@@ -50,7 +50,7 @@ Enable DAG → Trigger → Monitor via Runs & Logs.
 
 ---
 
-## 📚 Konsep yang Dipelajari
+##  Konsep yang Dipelajari
 
 ### DAG (Directed Acyclic Graph)
 Workflow terjadwal yang mengatur urutan eksekusi task.
@@ -62,7 +62,7 @@ Extract → Transform → Load.
 ### Scheduling
 DAG dijalankan otomatis dengan schedule `@daily`.
 
-## 📸 Airflow UI Screenshot
+##  Airflow UI Screenshot
 
 ![Airflow UI](airflow.png)
 
@@ -74,7 +74,7 @@ Airflow UI digunakan untuk:
 
 ---
 
-## 🎯 Tujuan Project
+##  Tujuan Project
 Project ini dibuat sebagai latihan dasar Data Engineering untuk memahami:
 - Orchestration workflow
 - ETL process
