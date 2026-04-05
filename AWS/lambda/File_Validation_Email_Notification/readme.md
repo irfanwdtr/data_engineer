@@ -106,23 +106,6 @@ export const handler = async (event) => {
 ![nama_gambar](gambarkode.png)
 ---
 
-## SNS Configuration
-
-### Topic
-```
-Name: lambda-notif-file
-Type: Standard
-```
-
-### Subscription
-```
-Protocol : Email
-Endpoint : your-email@gmail.com
-```
-
-⚠️ Harus klik **Confirm Subscription** dari email AWS
-
----
 
 ## IAM Configuration
 
@@ -162,49 +145,6 @@ Digunakan untuk:
 ![gambar1](gambar1.png)
 ![valid](valid.jpeg)
 
----
-
-## Issues & Fix
-
-### Authorization Error
-```
-not authorized to perform: sns:Publish
-```
-
-**Fix:**
-```
-AmazonSNSFullAccess
-```
-
----
-
-### Runtime Error
-```
-Runtime.ImportModuleError
-```
-
-**Fix:**
-- Gunakan `index.js`
-- Pastikan syntax sesuai Node.js runtime  
-
----
-
-## Concept Learned
-
-### Event-Driven Architecture
-Sistem berjalan berdasarkan event dari S3  
-
-### SNS (Publish-Subscribe)
-```
-Topic → broadcast
-Subscription → penerima
-```
-
-### IAM Permission
-Lambda harus memiliki izin untuk mengakses service lain  
-
-### CloudWatch Debugging
-Digunakan untuk monitoring dan troubleshooting  
 
 ---
 
