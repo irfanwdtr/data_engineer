@@ -76,7 +76,6 @@ Proses yang dilakukan:
 - Upload file CSV
 - Upload file JSON
 - Upload file Parquet
-- Upload file Excel
 - Menggabungkan seluruh data menjadi satu tabel
 
 Output:
@@ -194,40 +193,10 @@ Dashboard dibuat menggunakan Power BI dengan beberapa visual utama:
 ### Filter (Slicer)
 
 - Tahun
-- Negara
-- Produk
-- Sales Channel
+- Bulan
+
 
 ---
-
-# Struktur Folder
-
-```text
-Fabric-Sales-Project
-│
-├── notebooks/
-│   ├── NB_01_Bronze_Ingestion
-│   └── NB_02_Bronze_To_Silver
-│
-├── pipeline/
-│   └── PL_Silver_To_Warehouse
-│
-├── sql/
-│   ├── dim_country.sql
-│   ├── dim_product.sql
-│   ├── dim_date.sql
-│   └── fact_sales.sql
-│
-├── screenshots/
-│   ├── architecture.png
-│   ├── bronze.png
-│   ├── silver.png
-│   ├── warehouse.png
-│   ├── semantic_model.png
-│   └── dashboard.png
-│
-└── README.md
-```
 
 ---
 
