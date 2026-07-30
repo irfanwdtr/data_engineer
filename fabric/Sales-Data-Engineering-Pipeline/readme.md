@@ -248,36 +248,20 @@ Melalui proyek ini berhasil dibuat sebuah solusi Data Engineering end-to-end yan
 
 ---
 
-# Pengembangan Selanjutnya
-
-Beberapa pengembangan yang dapat dilakukan:
-
-- Incremental Load
-- Slowly Changing Dimension (SCD Type 2)
-- Logging ETL
-- Data Quality Validation
-- Error Handling
-- CI/CD Deployment
-- Integrasi dengan REST API
-
----
 
 # Screenshot
 
 ## Arsitektur
 
-*(Tambahkan gambar architecture.png di sini)*
+![Deskripsi Gambar](arsitektur.png)
 
 ## Dashboard
 
-*(Tambahkan screenshot dashboard di sini)*
+![Deskripsi Gambar](dashboard.png)
 
-## Semantic Model
+#pipeline
 
-*(Tambahkan screenshot semantic_model.png di sini)*
-
----
-
+![Deskripsi Gambar](pipeline.png)
 # Penulis
 
 **Irfan Widiantoro**
