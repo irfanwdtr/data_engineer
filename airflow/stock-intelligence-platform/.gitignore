@@ -1,0 +1,42 @@
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Node.js
+node_modules/
+.next/
+out/
+npm-debug.log*
+
+# ML artifacts
+*.joblib
+*.pkl
+
+# Logs
+*.log
+logs/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+
+# Keep the trained baseline model in Git
+!src/ml/models/
+!src/ml/models/*.joblib
+!src/ml/
+!src/ml/models/
+!src/ml/models/*.joblib
