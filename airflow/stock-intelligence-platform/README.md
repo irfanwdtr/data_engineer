@@ -1,6 +1,8 @@
 
 # Stock Intelligence Platform
 
+![Arsitektur Sistem](./1.png)
+
 Platform pengolahan dan analisis data pasar saham Indonesia berbasis Data Engineering. Proyek ini dibuat untuk menerapkan proses pengumpulan data, orkestrasi pipeline, transformasi data, validasi kualitas data, penyimpanan, hingga penyajian data melalui REST API dan web dashboard.
 
 Fokus utama proyek ini adalah membangun pipeline Data Engineering yang terstruktur dan terotomatisasi, mulai dari data mentah hingga menjadi data yang siap digunakan untuk analisis dan aplikasi downstream.
@@ -143,7 +145,7 @@ API bertugas mengambil dan menyajikan data yang telah diproses agar dapat diguna
 Dengan pemisahan ini, proses pengolahan data, penyimpanan, dan penyajian data memiliki tanggung jawab masing-masing.
 
 ---
-
+![Arsitektur Sistem](./2.png)
 ## Machine Learning
 
 Proyek ini juga memiliki komponen Machine Learning menggunakan algoritma **Logistic Regression** sebagai model baseline untuk klasifikasi pergerakan saham.
