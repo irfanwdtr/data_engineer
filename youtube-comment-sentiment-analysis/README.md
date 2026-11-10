@@ -272,16 +272,6 @@ Penyimpanan dibagi menjadi beberapa tahapan:
 - **Processed Data** – Menyimpan komentar yang telah melalui proses pembersihan.
 - **Sentiment Results** – Menyimpan hasil klasifikasi sentimen untuk kebutuhan visualisasi dashboard.
 
-## Pengembangan Selanjutnya
-
-Beberapa pengembangan yang dapat dilakukan untuk meningkatkan kemampuan sistem:
-
-- Mengimplementasikan PostgreSQL sebagai penyimpanan data terstruktur.
-- Menambahkan penjadwalan otomatis untuk proses pengambilan data.
-- Melakukan evaluasi akurasi model menggunakan dataset berlabel.
-- Mengembangkan teknik analisis topik yang lebih mendalam.
-- Menambahkan analisis historis dan perbandingan antarperiode.
-- Melakukan deployment aplikasi ke lingkungan cloud.
 
 ## Tentang Pengembang
 
