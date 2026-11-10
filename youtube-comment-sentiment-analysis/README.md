@@ -1,96 +1,296 @@
-# 📊 YouTube Comment Sentiment Analysis Dashboard
+# YouTube Comment Sentiment Analysis
 
-> **Data Engineering & Analytics Portfolio Project**: Platform dashboard interaktif untuk pencarian video YouTube, ekstraksi komentar publik, pemodelan sentimen NLP (Positive, Negative, Neutral), ekstraksi topik (TF-IDF / Topic Modeling), serta eksplorasi keluhan konsumen (Customer Pain Points).
+Platform analisis sentimen komentar YouTube berbasis *Data Engineering* dan *Machine Learning* yang dirancang untuk mengumpulkan, mengolah, menganalisis, dan memvisualisasikan opini pengguna berdasarkan kata kunci tertentu.
 
-![Project Preview](/banner.png)
+## Gambaran Umum Proyek
 
----
+YouTube Comment Sentiment Analysis merupakan proyek pengolahan data yang bertujuan untuk mendapatkan insight dari komentar publik di YouTube.
 
-## 🎯 Fitur Utama
+Pengguna dapat memasukkan kata kunci untuk mencari video YouTube yang relevan. Sistem kemudian melakukan pengambilan komentar, pembersihan data, klasifikasi sentimen, hingga menyajikan hasil analisis melalui dashboard interaktif.
 
-1. **Analytics Overview (BI Dashboard)**
-   - 5 KPI Metric Cards: Videos Analyzed, Comments Collected, Positive Sentiment, Negative Sentiment, Neutral Sentiment dengan trend delta.
-   - Donut Chart Sentiment Distribution interaktif dengan ringkasan sentral.
-   - Time Series Area Chart "Sentiment Trend Over Time" dengan multi-layer spline.
-   - Horizontal Bar Chart "Top Keywords" dengan statistik frekuensi kata kunci.
-   - Tabel "Recent Analysis History" dengan segmented sentiment bar.
+Proyek ini mengimplementasikan alur pengolahan data secara menyeluruh, mulai dari **Data Ingestion, Data Cleaning, Sentiment Analysis, Data Processing, hingga Data Visualization.**
 
-2. **YouTube Search**
-   - Pencarian video berdasarkan keyword (contoh: *"Review iPhone 17"*).
-   - Filter tanggal publikasi, batas jumlah video, dan opsi urutan (Relevansi, Views, Komentar).
-   - Video card lengkap dengan thumbnail, channel, durasi, view count, comment count, dan tombol *"Analyze Video Comments"*.
+## Tampilan Dashboard
 
-3. **Sentiment Analysis**
-   - Rincian sentimen makro dan confidence score rata-rata model NLP.
-   - Tab filter sentimen interaktif (Semua, Positive, Negative, Neutral).
-   - Feed komentar dengan detail author, tanggal, jumlah likes, sentimen badge, dan tag kata kunci.
+### 1. Overview Dashboard
 
-4. **Topic Analysis & Customer Pain Points**
-   - Word Cloud interaktif (TF-IDF) dengan indikator sentimen hijau/merah/abu-abu.
-   - Frekuensi kata kunci spesifik dan rasio kepuasan konsumen.
-   - Analisis mendalam *Customer Pain Points* dengan tingkat keparahan (*High*, *Medium*, *Low* impact) dan kutipan komentar nyata berbahasa Indonesia.
+Menampilkan ringkasan hasil analisis, jumlah video dan komentar, distribusi sentimen, tren sentimen, serta informasi utama dari komentar yang dianalisis.
 
-5. **Data Explorer**
-   - Tabel eksplorasi data lengkap dengan kolom `Comment ID`, `Video Title`, `Author`, `Comment`, `Published`, `Likes`, `Sentiment`, dan `Confidence Score`.
-   - Pencarian teks instan di seluruh baris.
-   - Filter sentimen dan pengaturan jumlah baris per halaman (*pagination*).
-   - **Fitur Export CSV** riil yang mengunduh dataset dalam format file `.csv`.
-   - Modal popup detail komentar saat baris diklik.
+![Overview Dashboard](1.png)
 
-6. **Analysis History**
-   - Riwayat eksekusi sesi pencarian dan analisis sebelumnya.
-   - Fitur *"Buka Hasil"* untuk memuat dataset sesi masa lalu langsung ke active state dashboard.
+### 2. Pencarian Video YouTube
 
----
+Memungkinkan pengguna mencari video YouTube berdasarkan kata kunci dan memulai proses pengumpulan serta analisis komentar.
 
-## 🛠️ Tech Stack Frontend
+![Pencarian Video YouTube](2.png)
 
-- **Framework**: Next.js 14 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **Charts / Visualizations**: Recharts
-- **Icons**: Lucide React
-- **Design System**: SaaS Analytics Theme (Dark Navy `#0b1329`, White cards `#ffffff`, Accent Blue, Emerald `#10b981`, Rose `#ef4444`)
+### 3. Analisis Sentimen
 
----
+Menampilkan hasil klasifikasi sentimen komentar ke dalam tiga kategori: Positif, Negatif, dan Netral.
 
-## 🚀 Menjalankan Proyek
+![Analisis Sentimen](3.png)
 
-### 1. Install Dependencies
+### 4. Analisis Topik dan Data Explorer
+
+Menampilkan topik yang sering dibicarakan, frekuensi kata kunci, potensi keluhan pengguna, serta eksplorasi data komentar secara terperinci. Data juga dapat difilter dan diekspor ke format CSV.
+
+![Analisis Topik dan Data Explorer](4.png)
+
+## Fitur Utama
+
+- **Pencarian Video YouTube** – Mencari video berdasarkan kata kunci yang dimasukkan pengguna.
+- **Pengumpulan Komentar** – Mengambil komentar publik dari video YouTube menggunakan YouTube Data API v3.
+- **Data Cleaning** – Membersihkan dan mempersiapkan data komentar sebelum dianalisis.
+- **Analisis Sentimen** – Mengklasifikasikan komentar menjadi Positif, Negatif, dan Netral.
+- **Analisis Topik** – Mengidentifikasi kata kunci, topik pembahasan, dan potensi keluhan pengguna.
+- **Dashboard Interaktif** – Menampilkan distribusi sentimen, tren, dan insight hasil analisis.
+- **Data Explorer** – Melakukan eksplorasi, penyaringan, dan ekspor data komentar ke CSV.
+
+## Arsitektur Data Pipeline
+
+Proyek ini menggunakan alur pengolahan data yang terdiri dari beberapa tahapan:
+
+1. **Data Ingestion** – Mengambil informasi video dan komentar publik melalui YouTube Data API v3.
+2. **Data Storage** – Menyimpan data komentar mentah dalam format JSON.
+3. **Data Cleaning** – Membersihkan dan mempersiapkan komentar untuk proses analisis.
+4. **Sentiment Analysis** – Menggunakan model klasifikasi sentimen bahasa Indonesia yang telah dilatih sebelumnya.
+5. **Data Processing** – Mengolah hasil klasifikasi dan menghasilkan ringkasan analisis.
+6. **Data Visualization** – Menampilkan hasil pengolahan data melalui dashboard Next.js.
+
+### Alur Sistem
+
+```text
+       Input Kata Kunci
+              |
+              v
+       YouTube Data API v3
+              |
+              v
+    Pencarian Video & Pengambilan
+           Komentar
+              |
+              v
+       Penyimpanan Data Mentah
+             (JSON)
+              |
+              v
+       Data Cleaning & Processing
+              |
+              v
+        Sentiment Analysis
+        (Model Bahasa Indonesia)
+              |
+              v
+      Agregasi Sentimen & Analisis
+               Topik
+              |
+              v
+         Backend FastAPI
+              |
+              v
+       Dashboard Next.js
+```
+
+## Teknologi yang Digunakan
+
+| Kategori | Teknologi |
+|---|---|
+| Frontend | Next.js, TypeScript |
+| Styling | Tailwind CSS |
+| Visualisasi Data | Recharts |
+| Backend | Python, FastAPI |
+| Sumber Data | YouTube Data API v3 |
+| Pengolahan Data | Python |
+| Sentiment Analysis | Hugging Face Transformers |
+| Model Machine Learning | `taufiqdp/indonesian-sentiment` |
+| Penyimpanan Data | JSON |
+| Lingkungan Pengembangan | WSL Ubuntu |
+
+## Struktur Proyek
+
+```text
+youtube-comment-sentiment-analysis/
+│
+├── backend/
+│   ├── app/
+│   │   ├── api/
+│   │   │   └── v1/
+│   │   │       └── youtube.py
+│   │   ├── services/
+│   │   │   ├── cleaning.py
+│   │   │   ├── sentiment.py
+│   │   │   └── storage.py
+│   │   └── main.py
+│   │
+│   ├── data/
+│   │   ├── raw/
+│   │   └── processed/
+│   │
+│   ├── requirements.txt
+│   └── .env.example
+│
+├── src/
+│   ├── app/
+│   ├── components/
+│   ├── context/
+│   └── lib/
+│
+├── public/
+├── package.json
+├── next.config.mjs
+├── tailwind.config.js
+├── README.md
+├── 1.png
+├── 2.png
+├── 3.png
+└── 4.png
+```
+
+## Instalasi dan Konfigurasi
+
+### Persyaratan
+
+Pastikan perangkat sudah memiliki:
+
+- Python 3.10 atau lebih baru
+- Node.js 20 atau lebih baru
+- npm
+- YouTube Data API v3 API Key
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/irfanwdtr/data_engineer.git
+cd data_engineer/youtube-comment-sentiment-analysis
+```
+
+### 2. Persiapan Backend
+
+Masuk ke direktori backend:
+
+```bash
+cd backend
+```
+
+Buat virtual environment:
+
+```bash
+python3 -m venv .venv
+```
+
+Aktifkan virtual environment:
+
+```bash
+source .venv/bin/activate
+```
+
+Instal seluruh dependency:
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Konfigurasi Environment Variable
+
+Buat file `.env` di dalam direktori `backend`:
+
+```bash
+touch .env
+```
+
+Tambahkan API Key YouTube:
+
+```env
+YOUTUBE_API_KEY=your_youtube_api_key
+```
+
+Ganti nilai tersebut dengan API Key YouTube Data API v3 milik sendiri.
+
+**Penting:** Jangan mengunggah file `.env` atau membagikan API Key ke repository publik.
+
+### 4. Menjalankan Backend
+
+Pastikan masih berada di direktori `backend`, kemudian jalankan:
+
+```bash
+uvicorn app.main:app --reload
+```
+
+Backend akan berjalan pada:
+
+- API: http://localhost:8000
+- Dokumentasi API: http://localhost:8000/docs
+- Health Check: http://localhost:8000/health
+
+### 5. Menjalankan Frontend
+
+Buka terminal baru dan masuk ke direktori utama proyek:
+
+```bash
+cd youtube-comment-sentiment-analysis
+```
+
+Instal dependency:
+
 ```bash
 npm install
 ```
 
-### 2. Jalankan Server Development
+Jalankan aplikasi:
+
 ```bash
 npm run dev
 ```
 
-Buka browser di `http://localhost:3000`.
+Buka dashboard melalui browser:
 
-### 3. Build untuk Production
-```bash
-npm run build
-npm run start
-```
+http://localhost:3000
+
+## Model Analisis Sentimen
+
+Proyek ini menggunakan model klasifikasi sentimen bahasa Indonesia dari Hugging Face:
+
+[`taufiqdp/indonesian-sentiment`](https://huggingface.co/taufiqdp/indonesian-sentiment)
+
+Model digunakan untuk mengklasifikasikan komentar ke dalam tiga kategori:
+
+| Kategori | Keterangan |
+|---|---|
+| Positif | Komentar yang mengandung opini atau tanggapan positif |
+| Negatif | Komentar yang mengandung opini atau tanggapan negatif |
+| Netral | Komentar yang bersifat informatif atau tidak menunjukkan sentimen yang jelas |
+
+Model digunakan untuk melakukan *inference* terhadap komentar yang dikumpulkan. Model tidak melakukan pelatihan ulang secara otomatis menggunakan data komentar baru.
+
+## Penyimpanan Data
+
+Sistem menggunakan format JSON untuk menyimpan data hasil pengambilan dan pengolahan komentar.
+
+Penyimpanan dibagi menjadi beberapa tahapan:
+
+- **Raw Data** – Menyimpan komentar asli hasil pengambilan dari YouTube.
+- **Processed Data** – Menyimpan komentar yang telah melalui proses pembersihan.
+- **Sentiment Results** – Menyimpan hasil klasifikasi sentimen untuk kebutuhan visualisasi dashboard.
+
+## Pengembangan Selanjutnya
+
+Beberapa pengembangan yang dapat dilakukan untuk meningkatkan kemampuan sistem:
+
+- Mengimplementasikan PostgreSQL sebagai penyimpanan data terstruktur.
+- Menambahkan penjadwalan otomatis untuk proses pengambilan data.
+- Melakukan evaluasi akurasi model menggunakan dataset berlabel.
+- Mengembangkan teknik analisis topik yang lebih mendalam.
+- Menambahkan analisis historis dan perbandingan antarperiode.
+- Melakukan deployment aplikasi ke lingkungan cloud.
+
+## Tentang Pengembang
+
+**Irfan Widiantoro**
+
+Data Engineering | Data Analytics | Python | SQL | Cloud Computing
+
+GitHub: [@irfanwdtr](https://github.com/irfanwdtr)
 
 ---
 
-## 🔌 Kesiapan Integrasi Backend (Phase 2 - FastAPI)
-
-Proyek ini telah dilengkapi arsitektur pemisah *Service Layer* di `src/lib/api.ts`.
-Saat backend FastAPI selesai dibuat:
-1. Atur `NEXT_PUBLIC_API_URL=http://localhost:8000` di file `.env.local`.
-2. Endpoint REST FastAPI yang didukung:
-   - `GET /api/v1/youtube/search?q={keyword}`
-   - `GET /api/v1/analytics/overview?q={keyword}`
-   - `GET /api/v1/comments?keyword={keyword}&sentiment={sentiment}`
-   - `GET /api/v1/analytics/topics?q={keyword}`
-   - `GET /api/v1/analytics/history`
-
----
-
-## 👤 Author
-**Data Engineer Portfolio Project**  
-YouTube Comment Sentiment Analysis Dashboard
-
+*Proyek ini dikembangkan sebagai bagian dari portofolio Data Engineering untuk menunjukkan implementasi pengumpulan data, pengolahan data, analisis sentimen berbasis Machine Learning, pengembangan API, dan visualisasi data.*
