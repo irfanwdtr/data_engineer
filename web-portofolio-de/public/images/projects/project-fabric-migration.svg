@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080C14"/>
+      <stop offset="50%" stop-color="#0B1120"/>
+      <stop offset="100%" stop-color="#050810"/>
+    </linearGradient>
+
+    <!-- Card Background Gradient -->
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0.95"/>
+    </linearGradient>
+
+    <!-- Accent Gradients -->
+    <linearGradient id="blueGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#60A5FA"/>
+    </linearGradient>
+
+    <linearGradient id="fabricGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0284C7"/>
+      <stop offset="50%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+
+    <linearGradient id="powerbiGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+
+    <!-- Pattern -->
+    <pattern id="gridPattern" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1E293B" stroke-width="0.7" stroke-opacity="0.5"/>
+      <circle cx="0" cy="0" r="1" fill="#38BDF8" fill-opacity="0.25"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="450" fill="url(#bgGrad)"/>
+  <rect width="800" height="450" fill="url(#gridPattern)"/>
+
+  <!-- Subtle Ambient Glow -->
+  <circle cx="150" cy="225" r="120" fill="#F59E0B" fill-opacity="0.03"/>
+  <circle cx="400" cy="225" r="140" fill="#38BDF8" fill-opacity="0.04"/>
+  <circle cx="650" cy="225" r="130" fill="#818CF8" fill-opacity="0.03"/>
+
+  <!-- Architecture Header Strip -->
+  <g id="header">
+    <rect x="40" y="24" width="720" height="42" rx="8" fill="#0B132B" stroke="#1E293B" stroke-width="1"/>
+    <circle cx="60" cy="45" r="4" fill="#10B981"/>
+    <text x="74" y="49" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="bold" fill="#38BDF8" letter-spacing="1.5">HYBRID DATA PIPELINE &amp; DATABASE MIGRATION</text>
+    <text x="736" y="49" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="10" fill="#64748B">MySQL ➔ SSMS ➔ Data Gateway ➔ Fabric ➔ Power BI</text>
+  </g>
+
+  <!-- Flow Connector Lines -->
+  <path d="M 185 235 L 235 235" stroke="#38BDF8" stroke-width="2" stroke-dasharray="4 3"/>
+  <polygon points="233,231 241,235 233,239" fill="#38BDF8"/>
+
+  <path d="M 405 235 L 445 235" stroke="#38BDF8" stroke-width="2" stroke-dasharray="4 3"/>
+  <polygon points="443,231 451,235 443,239" fill="#38BDF8"/>
+
+  <path d="M 575 235 L 615 235" stroke="#818CF8" stroke-width="2" stroke-dasharray="4 3"/>
+  <polygon points="613,231 621,235 613,239" fill="#818CF8"/>
+
+  <!-- NODE 1: MySQL Staging (Awal) -->
+  <g id="node-mysql">
+    <rect x="40" y="110" width="145" height="250" rx="12" fill="url(#cardGrad)" stroke="#334155" stroke-width="1.2"/>
+    <rect x="40" y="110" width="145" height="34" rx="12" fill="#0F172A" stroke="#334155" stroke-width="1.2"/>
+    <text x="112" y="132" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="bold" fill="#F59E0B">1. MySQL Staging</text>
+    
+    <!-- Sub elements -->
+    <rect x="52" y="156" width="121" height="42" rx="6" fill="#090D16" stroke="#1E293B"/>
+    <text x="112" y="174" text-anchor="middle" font-family="'Inter', sans-serif" font-size="10" font-weight="600" fill="#E2E8F0">Staging Database</text>
+    <text x="112" y="188" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#94A3B8">ERP Raw Tables</text>
+
+    <rect x="52" y="208" width="121" height="42" rx="6" fill="#090D16" stroke="#1E293B"/>
+    <text x="112" y="226" text-anchor="middle" font-family="'Inter', sans-serif" font-size="10" font-weight="600" fill="#E2E8F0">Schema Mapping</text>
+    <text x="112" y="240" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#94A3B8">Data Types &amp; Keys</text>
+
+    <rect x="52" y="260" width="121" height="52" rx="6" fill="#090D16" stroke="#1E293B"/>
+    <text x="112" y="278" text-anchor="middle" font-family="'Inter', sans-serif" font-size="10" font-weight="600" fill="#F59E0B">Data Migration</text>
+    <text x="112" y="292" text-anchor="middle" font-family="'Inter', sans-serif" font-size="8.5" fill="#94A3B8">Migrasi Terstruktur</text>
+    <text x="112" y="304" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8" fill="#10B981">Validasi Integritas ✓</text>
+
+    <text x="112" y="344" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" fill="#64748B">Sumber Data Awal</text>
+  </g>
+
+  <!-- NODE 2: On-Premises SQL Server / SSMS (RDP) -->
+  <g id="node-ssms">
+    <rect x="241" y="95" width="164" height="280" rx="12" fill="url(#cardGrad)" stroke="#38BDF8" stroke-width="1.5"/>
+    <rect x="241" y="95" width="164" height="34" rx="12" fill="#0B132B" stroke="#38BDF8" stroke-width="1.5"/>
+    <text x="323" y="117" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="bold" fill="#38BDF8">2. SQL Server (SSMS)</text>
+    
+    <!-- RDP Server tag -->
+    <rect x="254" y="138" width="138" height="22" rx="4" fill="#0C1B33" stroke="#1D4ED8"/>
+    <text x="323" y="153" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" fill="#93C5FD">On-Premises (Akses RDP)</text>
+
+    <!-- Stored Procedure Box -->
+    <rect x="254" y="170" width="138" height="58" rx="6" fill="#090D16" stroke="#334155"/>
+    <text x="323" y="188" text-anchor="middle" font-family="'Inter', sans-serif" font-size="10" font-weight="bold" fill="#38BDF8">Stored Procedures</text>
+    <text x="323" y="202" text-anchor="middle" font-family="'Inter', sans-serif" font-size="8.5" fill="#E2E8F0">Logika Ekstraksi &amp; Transform</text>
+    <text x="323" y="216" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8" fill="#64748B">CREATE PROCEDURE ...</text>
+
+    <!-- SQL Server Agent Box -->
+    <rect x="254" y="238" width="138" height="58" rx="6" fill="#090D16" stroke="#334155"/>
+    <text x="323" y="256" text-anchor="middle" font-family="'Inter', sans-serif" font-size="10" font-weight="bold" fill="#10B981">SQL Server Agent</text>
+    <text x="323" y="270" text-anchor="middle" font-family="'Inter', sans-serif" font-size="8.5" fill="#E2E8F0">Otomasi Jadwal Job</text>
+    <text x="323" y="284" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8" fill="#10B981">Panggilan SP Otomatis ✓</text>
+
+    <text x="323" y="324" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="9" fill="#94A3B8">Database Staging Baru</text>
+    <text x="323" y="340" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#64748B">Ekstraksi &amp; Konsolidasi Data</text>
+  </g>
+
+  <!-- NODE 3: On-Premises Data Gateway -->
+  <g id="node-gateway">
+    <rect x="451" y="130" width="124" height="210" rx="12" fill="url(#cardGrad)" stroke="#6366F1" stroke-width="1.3"/>
+    <rect x="451" y="130" width="124" height="34" rx="12" fill="#0F172A" stroke="#6366F1" stroke-width="1.3"/>
+    <text x="513" y="152" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="bold" fill="#A5B4FC">3. Data Gateway</text>
+
+    <rect x="461" y="176" width="104" height="40" rx="6" fill="#090D16" stroke="#1E293B"/>
+    <text x="513" y="193" text-anchor="middle" font-family="'Inter', sans-serif" font-size="9.5" font-weight="600" fill="#E2E8F0">Secure Tunnel</text>
+    <text x="513" y="207" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8" fill="#818CF8">Hybrid Connector</text>
+
+    <rect x="461" y="226" width="104" height="54" rx="6" fill="#090D16" stroke="#1E293B"/>
+    <text x="513" y="244" text-anchor="middle" font-family="'Inter', sans-serif" font-size="9" font-weight="600" fill="#E2E8F0">Jembatan Aman</text>
+    <text x="513" y="258" text-anchor="middle" font-family="'Inter', sans-serif" font-size="8" fill="#94A3B8">On-Prem ke Cloud</text>
+    <text x="513" y="271" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8" fill="#10B981">Terenkripsi SSL ✓</text>
+
+    <text x="513" y="315" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8.5" fill="#64748B">Sinkronisasi Cloud</text>
+  </g>
+
+  <!-- NODE 4: Microsoft Fabric & Power BI -->
+  <g id="node-fabric">
+    <rect x="621" y="95" width="139" height="280" rx="12" fill="url(#cardGrad)" stroke="#818CF8" stroke-width="1.4"/>
+    <rect x="621" y="95" width="139" height="34" rx="12" fill="#0F172A" stroke="#818CF8" stroke-width="1.4"/>
+    <text x="690" y="117" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="bold" fill="#C084FC">4. Fabric &amp; BI</text>
+
+    <!-- Microsoft Fabric Cloud Pipeline -->
+    <rect x="631" y="142" width="119" height="72" rx="6" fill="#090D16" stroke="#334155"/>
+    <text x="690" y="160" text-anchor="middle" font-family="'Inter', sans-serif" font-size="10" font-weight="bold" fill="#60A5FA">Microsoft Fabric</text>
+    <text x="690" y="174" text-anchor="middle" font-family="'Inter', sans-serif" font-size="8.5" fill="#E2E8F0">Data Pipeline &amp; Lake</text>
+    <rect x="641" y="184" width="99" height="20" rx="3" fill="#1E1B4B"/>
+    <text x="690" y="198" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8" fill="#A5B4FC">Jadwal Load Auto ⏱</text>
+
+    <!-- Power BI Dashboards -->
+    <rect x="631" y="226" width="119" height="74" rx="6" fill="#090D16" stroke="#334155"/>
+    <text x="690" y="244" text-anchor="middle" font-family="'Inter', sans-serif" font-size="10" font-weight="bold" fill="#F59E0B">Power BI Dashboard</text>
+    <text x="690" y="258" text-anchor="middle" font-family="'Inter', sans-serif" font-size="8.5" fill="#E2E8F0">Laporan Bisnis Eksekutif</text>
+    <rect x="641" y="268" width="99" height="20" rx="3" fill="#14532D"/>
+    <text x="690" y="282" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8" fill="#4ADE80">Refresh Otomatis ✓</text>
+
+    <text x="690" y="332" text-anchor="middle" font-family="'Inter', sans-serif" font-size="8.5" fill="#94A3B8">Keputusan Bisnis</text>
+    <text x="690" y="348" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="8" fill="#64748B">Siap Pakai Stakeholder</text>
+  </g>
+
+  <!-- Footer Indicator -->
+  <g id="footer-badges">
+    <rect x="40" y="394" width="720" height="34" rx="6" fill="#0A0F1D" stroke="#1E293B"/>
+    <text x="56" y="415" font-family="'JetBrains Mono', monospace" font-size="9.5" fill="#94A3B8">Status Arsitektur:</text>
+    <text x="175" y="415" font-family="'JetBrains Mono', monospace" font-size="9.5" fill="#10B981" font-weight="bold">● PRODUKSI AKTIF</text>
+    <text x="320" y="415" font-family="'JetBrains Mono', monospace" font-size="9.5" fill="#94A3B8">Konektivitas:</text>
+    <text x="405" y="415" font-family="'JetBrains Mono', monospace" font-size="9.5" fill="#38BDF8">Hybrid On-Premises ➔ Azure Fabric</text>
+    <text x="744" y="415" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="9.5" fill="#A5B4FC">Orkestrasi Terautomasi</text>
+  </g>
+</svg>

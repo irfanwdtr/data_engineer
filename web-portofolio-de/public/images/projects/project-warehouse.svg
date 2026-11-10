@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070A14"/>
+      <stop offset="50%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#050810"/>
+    </linearGradient>
+
+    <pattern id="gridDwh" width="35" height="35" patternUnits="userSpaceOnUse">
+      <path d="M 35 0 L 0 0 0 35" fill="none" stroke="#1E293B" stroke-width="0.6" stroke-opacity="0.5"/>
+    </pattern>
+
+    <filter id="glowViolet" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <rect width="800" height="450" fill="url(#bgGrad3)"/>
+  <rect width="800" height="450" fill="url(#gridDwh)"/>
+
+  <!-- Top Header Bar -->
+  <g transform="translate(40, 25)">
+    <rect width="720" height="42" rx="10" fill="#0F172A" stroke="#1E293B" stroke-width="1.2"/>
+    <circle cx="25" cy="21" r="5" fill="#EF4444"/>
+    <circle cx="42" cy="21" r="5" fill="#F59E0B"/>
+    <circle cx="59" cy="21" r="5" fill="#10B981"/>
+    <text x="85" y="26" fill="#94A3B8" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="500">dwh_kimball_marts://star_schema_dimensional_models.sql</text>
+    <rect x="575" y="10" width="130" height="22" rx="11" fill="#818CF8" fill-opacity="0.15" stroke="#818CF8" stroke-width="1"/>
+    <text x="640" y="25" text-anchor="middle" fill="#A5B4FC" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600">MODELS: 25+ MARTS</text>
+  </g>
+
+  <!-- Central Star Schema Visualizer -->
+  <g transform="translate(40, 85)">
+    
+    <!-- Relationship Connector Lines from Center FACT to DIMS -->
+    <line x1="360" y1="130" x2="160" y2="70" stroke="#818CF8" stroke-width="2" stroke-dasharray="4,4"/>
+    <line x1="360" y1="130" x2="560" y2="70" stroke="#818CF8" stroke-width="2" stroke-dasharray="4,4"/>
+    <line x1="360" y1="130" x2="160" y2="190" stroke="#818CF8" stroke-width="2" stroke-dasharray="4,4"/>
+    <line x1="360" y1="130" x2="560" y2="190" stroke="#818CF8" stroke-width="2" stroke-dasharray="4,4"/>
+
+    <!-- Central Center Node: FACT_SALES -->
+    <g transform="translate(270, 75)">
+      <rect width="180" height="110" rx="12" fill="#090D16" stroke="#38BDF8" stroke-width="2"/>
+      <rect x="10" y="12" width="160" height="25" rx="6" fill="#0284C7" fill-opacity="0.2"/>
+      <text x="90" y="29" text-anchor="middle" fill="#38BDF8" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700">FCT_TRANSACTIONS</text>
+      
+      <text x="25" y="55" fill="#E2E8F0" font-family="'JetBrains Mono', monospace" font-size="10">🔑 transaction_key (PK)</text>
+      <text x="25" y="72" fill="#94A3B8" font-family="'JetBrains Mono', monospace" font-size="10">↳ customer_key (FK)</text>
+      <text x="25" y="89" fill="#94A3B8" font-family="'JetBrains Mono', monospace" font-size="10">↳ product_key (FK)</text>
+      <text x="25" y="104" fill="#34D399" font-family="'JetBrains Mono', monospace" font-size="10">∑ net_revenue ($)</text>
+    </g>
+
+    <!-- Dimension 1: DIM_CUSTOMERS (Top Left) -->
+    <g transform="translate(70, 25)">
+      <rect width="160" height="80" rx="10" fill="#0F172A" stroke="#818CF8" stroke-width="1.2"/>
+      <text x="15" y="24" fill="#818CF8" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700">DIM_CUSTOMERS</text>
+      <text x="15" y="44" fill="#E2E8F0" font-family="'JetBrains Mono', monospace" font-size="9">🔑 customer_key</text>
+      <text x="15" y="58" fill="#94A3B8" font-family="'JetBrains Mono', monospace" font-size="9">customer_name</text>
+      <text x="15" y="72" fill="#F59E0B" font-family="'JetBrains Mono', monospace" font-size="9">SCD Type 2 Tracked</text>
+    </g>
+
+    <!-- Dimension 2: DIM_PRODUCTS (Top Right) -->
+    <g transform="translate(490, 25)">
+      <rect width="160" height="80" rx="10" fill="#0F172A" stroke="#818CF8" stroke-width="1.2"/>
+      <text x="15" y="24" fill="#818CF8" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700">DIM_PRODUCTS</text>
+      <text x="15" y="44" fill="#E2E8F0" font-family="'JetBrains Mono', monospace" font-size="9">🔑 product_key</text>
+      <text x="15" y="58" fill="#94A3B8" font-family="'JetBrains Mono', monospace" font-size="9">product_category</text>
+      <text x="15" y="72" fill="#94A3B8" font-family="'JetBrains Mono', monospace" font-size="9">unit_price ($)</text>
+    </g>
+
+    <!-- Dimension 3: DIM_DATE (Bottom Left) -->
+    <g transform="translate(70, 150)">
+      <rect width="160" height="80" rx="10" fill="#0F172A" stroke="#818CF8" stroke-width="1.2"/>
+      <text x="15" y="24" fill="#818CF8" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700">DIM_CALENDAR</text>
+      <text x="15" y="44" fill="#E2E8F0" font-family="'JetBrains Mono', monospace" font-size="9">🔑 date_key (YYYYMMDD)</text>
+      <text x="15" y="58" fill="#94A3B8" font-family="'JetBrains Mono', monospace" font-size="9">fiscal_quarter</text>
+      <text x="15" y="72" fill="#94A3B8" font-family="'JetBrains Mono', monospace" font-size="9">is_holiday_flag</text>
+    </g>
+
+    <!-- Dimension 4: DIM_REGION / STORE (Bottom Right) -->
+    <g transform="translate(490, 150)">
+      <rect width="160" height="80" rx="10" fill="#0F172A" stroke="#818CF8" stroke-width="1.2"/>
+      <text x="15" y="24" fill="#818CF8" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700">DIM_GEOGRAPHY</text>
+      <text x="15" y="44" fill="#E2E8F0" font-family="'JetBrains Mono', monospace" font-size="9">🔑 geo_key</text>
+      <text x="15" y="58" fill="#94A3B8" font-family="'JetBrains Mono', monospace" font-size="9">country_region</text>
+      <text x="15" y="72" fill="#94A3B8" font-family="'JetBrains Mono', monospace" font-size="9">timezone</text>
+    </g>
+  </g>
+
+  <!-- Bottom Metric Pill Strip -->
+  <g transform="translate(40, 355)">
+    <rect width="720" height="65" rx="10" fill="#0F172A" stroke="#1E293B" stroke-width="1"/>
+    
+    <g transform="translate(50, 22)">
+      <text x="0" y="12" fill="#64748B" font-family="'JetBrains Mono', monospace" font-size="10" text-transform="uppercase">TRANSFORMATION ENGINE</text>
+      <text x="0" y="32" fill="#38BDF8" font-family="'Inter', sans-serif" font-size="14" font-weight="700">dbt Core (Incremental)</text>
+    </g>
+
+    <line x1="240" y1="12" x2="240" y2="52" stroke="#1E293B" stroke-width="1"/>
+
+    <g transform="translate(290, 22)">
+      <text x="0" y="12" fill="#64748B" font-family="'JetBrains Mono', monospace" font-size="10" text-transform="uppercase">NIGHTLY BUILD TIME</text>
+      <text x="0" y="32" fill="#10B981" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="700">14 Mins (from 48m)</text>
+    </g>
+
+    <line x1="490" y1="12" x2="490" y2="52" stroke="#1E293B" stroke-width="1"/>
+
+    <g transform="translate(540, 22)">
+      <text x="0" y="12" fill="#64748B" font-family="'JetBrains Mono', monospace" font-size="10" text-transform="uppercase">DATA QUALITY CHECKS</text>
+      <text x="0" y="32" fill="#818CF8" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="700">120+ Automated Tests</text>
+    </g>
+  </g>
+</svg>
+

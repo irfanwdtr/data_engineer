@@ -1,0 +1,64 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Skills from '../components/Skills.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Experience from '../components/Experience.astro';
+import Contact from '../components/Contact.astro';
+import { getCollection } from 'astro:content';
+
+const allProjects = await getCollection('projects');
+const sortedProjects = allProjects.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+---
+
+<MainLayout>
+  <!-- Hero Section -->
+  <Hero />
+
+  <!-- About Section -->
+  <About />
+
+  <!-- Technical Skills -->
+  <Skills />
+
+  <!-- Featured Projects Showcase Section -->
+  <section id="projects" class="py-20 border-t border-slate-800/80">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Header Section Bersih -->
+      <div class="space-y-2 mb-10">
+        <div class="text-xs font-mono text-sky-400 uppercase tracking-wider">
+          Proyek
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+          Proyek Rekayasa Data &amp; Arsitektur
+        </h2>
+
+      </div>
+
+      <!-- Grid Kartu Proyek Bersih (2 Kolom) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {sortedProjects.map((project) => (
+          <ProjectCard
+            slug={project.slug}
+            title={project.data.title}
+            description={project.data.description}
+            category={project.data.category}
+            tags={project.data.tags}
+            githubUrl={project.data.githubUrl}
+            image={project.data.architectureImage}
+            company={project.data.company}
+          />
+        ))}
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Work Experience Timeline -->
+  <Experience />
+
+  <!-- Contact CTA Section -->
+  <Contact />
+</MainLayout>

@@ -1,0 +1,96 @@
+---
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { profile } from '../data/profile';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonicalURL?: string;
+}
+
+const {
+  title = "Irfan Widiantoro | Portofolio Data Engineer",
+  description = "Portofolio profesional Irfan Widiantoro, Data Engineer yang berspesialisasi dalam pipeline ETL/ELT scalable, pemodelan data dimensional, orkestrasi Apache Airflow, dan platform cloud data.",
+  image = "/images/og-preview.svg",
+  canonicalURL = Astro.url.href,
+} = Astro.props;
+
+const siteTitle = title.includes("Irfan Widiantoro") ? title : `${title} | Irfan Widiantoro`;
+
+const schemaOrgData = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Irfan Widiantoro",
+  "jobTitle": "Data Engineer",
+  "description": description,
+  "url": Astro.site?.toString() || "https://irfanwidiantoro.dev",
+  "sameAs": [
+    profile.github,
+    profile.linkedin
+  ],
+  "knowsAbout": [
+    "Data Engineering",
+    "ETL / ELT Pipelines",
+    "Apache Airflow",
+    "dbt",
+    "PostgreSQL",
+    "Python",
+    "SQL",
+    "AWS",
+    "Docker"
+  ]
+};
+---
+
+<!doctype html>
+<html lang="id" class="dark scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary Meta Tags -->
+    <title>{siteTitle}</title>
+    <meta name="title" content={siteTitle} />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.url)} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalURL} />
+    <meta property="twitter:title" content={siteTitle} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={new URL(image, Astro.url)} />
+
+    <!-- Schema.org JSON-LD Structured Data for SEO -->
+    <script type="application/ld+json" set:html={JSON.stringify(schemaOrgData)} />
+
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-[#090D16] text-slate-100 min-h-screen flex flex-col font-sans selection:bg-sky-500/20 selection:text-sky-300 antialiased">
+    <Navbar />
+
+    <main class="flex-grow">
+      <slot />
+    </main>
+
+    <Footer />
+  </body>
+</html>

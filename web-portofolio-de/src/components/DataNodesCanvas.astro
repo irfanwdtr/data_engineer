@@ -1,0 +1,316 @@
+---
+// DataNodesCanvas.astro - Matrix Aliran Data & Telemetri Pipeline Data Engineering
+---
+
+<div class="absolute inset-0 pointer-events-none overflow-hidden select-none z-0">
+  <!-- Grid Arsitektur Blueprint Halus -->
+  <div class="absolute inset-0 bg-[linear-gradient(to_right,#1e293b15_1px,transparent_1px),linear-gradient(to_bottom,#1e293b15_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
+
+  <!-- Canvas Aliran Data Streams & Telemetri Real-time -->
+  <canvas id="data-matrix-canvas" class="w-full h-full opacity-60"></canvas>
+  
+  <!-- Vignette & Gradient Mask agar Teks Headline & Tombol Sangat Kontras & Nyaman Dibaca -->
+  <div class="absolute inset-0 bg-gradient-to-t from-[#090D16] via-transparent to-[#090D16]/70 pointer-events-none"></div>
+  <div class="absolute inset-0 bg-gradient-to-r from-[#090D16]/80 via-transparent to-[#090D16]/60 pointer-events-none"></div>
+</div>
+
+<script>
+  function initDataMatrixCanvas() {
+    const canvas = document.getElementById('data-matrix-canvas') as HTMLCanvasElement | null;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = 0;
+    let height = 0;
+    let animationFrameId: number;
+    let isVisible = true;
+
+    // Kumpulan Karakter & Token Khas Data Engineering
+    const dataTokens = [
+      // Binary & Bits
+      '0', '1', '0', '1', '1', '0', '1', '0', '1', '1',
+      // Hex Memory & Offsets
+      '0x7F', '0x2A', '0xA4', '0xC1', '0x00', '0xFF',
+      // SQL Keywords
+      'SELECT', 'FROM', 'JOIN', 'WHERE', 'GROUP BY', 'HAVING', 'ORDER BY', 'PARTITION BY', 'OVER()',
+      // Data Types & Formats
+      'INT64', 'VARCHAR', 'TIMESTAMP', 'JSONB', 'BOOLEAN', 'NUMERIC',
+      // Storage & File Formats
+      'PARQUET', 'DELTA', 'SNAPPY', 'AVRO', 'CSV', 'ORC',
+      // Data Engineering Tools & Concepts
+      'AIRFLOW', 'PYSPARK', 'DBT', 'POSTGRES', 'KAFKA', 'AWS_S3', 'GLUE',
+      'STAR_SCHEMA', 'FACT_SALES', 'DIM_CUST', 'STAGING', 'UPSERT',
+      // Live Metrics / Telemetry
+      'ROWS:+42.5K', 'SLA:99.9%', 'LATENCY:12ms', 'PORT:5432', 'STATUS:200'
+    ];
+
+    // Kolom-kolom stream data
+    interface StreamColumn {
+      x: number;
+      y: number;
+      speed: number;
+      length: number;
+      chars: string[];
+      changeCounter: number;
+      fontSize: number;
+      isHighlighted: boolean;
+    }
+
+    // Paket data horizontal yang bergerak di jalur pipeline
+    interface PipelineTrack {
+      y: number;
+      x: number;
+      speed: number;
+      label: string;
+      color: string;
+    }
+
+    let columns: StreamColumn[] = [];
+    let horizontalPipes: PipelineTrack[] = [];
+    const mouse = { x: -1000, y: -1000, radius: 140 };
+
+    function getRandomToken() {
+      return dataTokens[Math.floor(Math.random() * dataTokens.length)];
+    }
+
+    function resize() {
+      if (!canvas) return;
+      const rect = canvas.parentElement?.getBoundingClientRect();
+      width = rect?.width || window.innerWidth;
+      height = rect?.height || window.innerHeight;
+
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx?.scale(dpr, dpr);
+    }
+
+    function initColumns() {
+      columns = [];
+      horizontalPipes = [];
+
+      const colSpacing = width < 640 ? 42 : 36;
+      const colCount = Math.floor(width / colSpacing);
+
+      for (let i = 0; i < colCount; i++) {
+        const streamLength = Math.floor(Math.random() * 12) + 8;
+        const chars: string[] = [];
+        for (let j = 0; j < streamLength; j++) {
+          chars.push(getRandomToken());
+        }
+
+        columns.push({
+          x: i * colSpacing + Math.random() * 8,
+          y: Math.random() * -height * 1.2,
+          speed: Math.random() * 0.75 + 0.45,
+          length: streamLength,
+          chars,
+          changeCounter: 0,
+          fontSize: Math.random() > 0.85 ? 11 : 9.5,
+          isHighlighted: false
+        });
+      }
+
+      // 3 Jalur Pipeline Horizontal (Simulasi Aliran Data Pipeline)
+      const pipeLabels = [
+        'INGESTION_STREAM_01: 24,800 msg/s',
+        'DELTA_LAKEHOUSE_PIPELINE: SNAPPY_PARQUET',
+        'AIRFLOW_DAG_SCHEDULER: RUNNING [SLA OK]'
+      ];
+
+      for (let k = 0; k < 3; k++) {
+        horizontalPipes.push({
+          y: (height * 0.25) + (k * height * 0.28),
+          x: Math.random() * -width,
+          speed: (k + 1) * 0.6 + 0.3,
+          label: pipeLabels[k],
+          color: k === 0 ? '#38BDF8' : k === 1 ? '#34D399' : '#A78BFA'
+        });
+      }
+    }
+
+    function update() {
+      // 1. Update Kolom Stream Data Vertikal
+      for (let i = 0; i < columns.length; i++) {
+        const col = columns[i];
+        col.y += col.speed;
+
+        // Acak pergantian karakter sesekali agar terasa live data stream
+        col.changeCounter++;
+        if (col.changeCounter > 15) {
+          col.changeCounter = 0;
+          const randomIdx = Math.floor(Math.random() * col.chars.length);
+          col.chars[randomIdx] = getRandomToken();
+        }
+
+        // Efek kursor mouse mendekati kolom
+        const distToMouse = Math.abs(col.x - mouse.x);
+        col.isHighlighted = distToMouse < mouse.radius && mouse.y > col.y && mouse.y < (col.y + col.length * 20);
+
+        // Reset ke atas saat melewati batas bawah
+        if (col.y > height + (col.length * 22)) {
+          col.y = Math.random() * -120 - 40;
+          col.speed = Math.random() * 0.75 + 0.45;
+        }
+      }
+
+      // 2. Update Jalur Pipeline Horizontal
+      for (const pipe of horizontalPipes) {
+        pipe.x += pipe.speed;
+        if (pipe.x > width + 250) {
+          pipe.x = -350;
+        }
+      }
+    }
+
+    function draw() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+
+      // 1. Gambar Jalur Pipeline Horizontal (Circuit Data Wire)
+      for (const pipe of horizontalPipes) {
+        // Garis jalur redup
+        ctx.beginPath();
+        ctx.moveTo(0, pipe.y);
+        ctx.lineTo(width, pipe.y);
+        ctx.strokeStyle = 'rgba(30, 41, 59, 0.45)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 6]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Paket data yang meluncur di atas garis
+        ctx.font = '500 9px "JetBrains Mono", monospace';
+        ctx.fillStyle = pipe.color;
+        ctx.shadowColor = pipe.color;
+        ctx.shadowBlur = 6;
+        ctx.fillText(`▶ [${pipe.label}]`, pipe.x, pipe.y - 4);
+
+        // Titik laser di depan teks
+        ctx.beginPath();
+        ctx.arc(pipe.x - 6, pipe.y, 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
+      // 2. Gambar Stream Data Vertikal (Data Rain)
+      for (let i = 0; i < columns.length; i++) {
+        const col = columns[i];
+        const stepY = col.fontSize + 8;
+
+        for (let j = 0; j < col.length; j++) {
+          const charY = col.y + (j * stepY);
+          if (charY < -20 || charY > height + 20) continue;
+
+          const text = col.chars[j];
+          const isHead = (j === col.length - 1); // Karakter paling depan/bawah
+          const progress = j / col.length; // Posisi dari ekor (0) ke kepala (1)
+
+          ctx.font = `${isHead ? '600' : '400'} ${col.fontSize}px "JetBrains Mono", monospace`;
+
+          if (col.isHighlighted) {
+            // Jika tersorot kursor mouse: bercahaya kuat
+            ctx.fillStyle = isHead ? '#FFFFFF' : '#38BDF8';
+            ctx.shadowColor = '#38BDF8';
+            ctx.shadowBlur = isHead ? 8 : 4;
+          } else if (isHead) {
+            // Kepala stream: putih / cyan terang
+            ctx.fillStyle = text.startsWith('0') || text.startsWith('1') ? '#38BDF8' : '#F8FAFC';
+            ctx.shadowColor = '#38BDF8';
+            ctx.shadowBlur = 5;
+          } else {
+            // Tubuh stream: memudar halus ke atas
+            const alpha = Math.max(0.08, progress * 0.45);
+            
+            if (text === 'SELECT' || text === 'FROM' || text === 'DELTA' || text === 'PARQUET' || text === 'PYSPARK' || text === 'AIRFLOW') {
+              ctx.fillStyle = `rgba(56, 189, 248, ${alpha * 1.4})`; // Aksen Sky
+            } else if (text.startsWith('ROWS:') || text.startsWith('SLA:') || text === 'INT64' || text === 'FACT_SALES') {
+              ctx.fillStyle = `rgba(52, 211, 153, ${alpha * 1.3})`; // Aksen Emerald
+            } else {
+              ctx.fillStyle = `rgba(148, 163, 184, ${alpha})`; // Slate
+            }
+            ctx.shadowBlur = 0;
+          }
+
+          ctx.fillText(text, col.x, charY);
+          ctx.shadowBlur = 0;
+        }
+      }
+
+      // 3. Lingkaran Sensor Radar Kursor Mouse
+      if (mouse.x > 0 && mouse.y > 0) {
+        ctx.beginPath();
+        ctx.arc(mouse.x, mouse.y, 45, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 3]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.font = '500 8.5px "JetBrains Mono", monospace';
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.5)';
+        ctx.fillText(`DATA_HUB [${Math.floor(mouse.x)}, ${Math.floor(mouse.y)}]`, mouse.x + 8, mouse.y - 8);
+      }
+    }
+
+    function loop() {
+      if (isVisible) {
+        update();
+        draw();
+      }
+      animationFrameId = requestAnimationFrame(loop);
+    }
+
+    function onMouseMove(e: MouseEvent) {
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+    }
+
+    function onMouseLeave() {
+      mouse.x = -1000;
+      mouse.y = -1000;
+    }
+
+    window.addEventListener('resize', () => {
+      resize();
+      initColumns();
+    });
+
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseout', onMouseLeave);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisible = entry.isIntersecting;
+        });
+      },
+      { threshold: 0.05 }
+    );
+
+    if (canvas.parentElement) {
+      observer.observe(canvas.parentElement);
+    }
+
+    resize();
+    initColumns();
+    loop();
+
+    document.addEventListener('astro:before-swap', () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseout', onMouseLeave);
+      observer.disconnect();
+    }, { once: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDataMatrixCanvas);
+  } else {
+    initDataMatrixCanvas();
+  }
+</script>

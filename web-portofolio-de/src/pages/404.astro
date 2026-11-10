@@ -1,0 +1,49 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+---
+
+<MainLayout title="404 - Halaman Tidak Ditemukan | Irfan Widiantoro">
+  <div class="min-h-[70vh] flex items-center justify-center py-20 px-4">
+    <div class="max-w-lg w-full text-center space-y-6 p-8 rounded-2xl border border-slate-800 bg-[#0B0F17] shadow-2xl">
+      
+      <!-- Error Status Indicator -->
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-400 font-mono text-xs">
+        <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+        <span>GALAT 404 // ROUTE_TIDAK_DITEMUKAN</span>
+      </div>
+
+      <!-- Main Message -->
+      <div class="space-y-2">
+        <h1 class="text-5xl font-extrabold text-white font-mono tracking-tight">
+          404
+        </h1>
+        <h2 class="text-xl font-bold text-slate-200">
+          Node Pipeline Tidak Dapat Dijangkau
+        </h2>
+        <p class="text-sm text-slate-400 leading-relaxed">
+          Halaman atau studi kasus arsitektur yang Anda tuju tidak ditemukan dalam topologi kluster saat ini.
+        </p>
+      </div>
+
+      <!-- Pipeline Diagnostic Box -->
+      <div class="p-3.5 rounded-lg bg-slate-950 border border-slate-800/80 font-mono text-xs text-left space-y-1.5 text-slate-400">
+        <div><span class="text-sky-400">&gt;</span> status: <span class="text-rose-400">TIDAK_DITEMUKAN</span></div>
+        <div><span class="text-sky-400">&gt;</span> tindakan: <span class="text-emerald-400">KEMBALI_KE_BERANDA</span></div>
+      </div>
+
+      <!-- Back Home Button -->
+      <div class="pt-2">
+        <a
+          href="/"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold text-sm shadow-[0_0_20px_rgba(56,189,248,0.3)] transition-all"
+        >
+          <span>Kembali ke Beranda Utama</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</MainLayout>

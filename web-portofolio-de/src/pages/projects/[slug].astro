@@ -1,0 +1,341 @@
+---
+import { getCollection } from 'astro:content';
+import MainLayout from '../../layouts/MainLayout.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { title, description, category, tags, githubUrl, architectureImage, gallery, company, role, projectType } = project.data;
+const { Content } = await project.render();
+
+// Normalisasi list gambar untuk slider
+const imageList = gallery && gallery.length > 0
+  ? gallery.map((item, idx) => {
+      if (typeof item === 'string') {
+        return { image: item, title: `Tampilan ${idx + 1}` };
+      }
+      return { image: item.image, title: item.title || `Tampilan ${idx + 1}` };
+    })
+  : architectureImage
+    ? [{ image: architectureImage, title: title }]
+    : [];
+---
+
+<MainLayout title={`${title} | Irfan Widiantoro`} description={description}>
+  <div class="py-12 md:py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      
+      <!-- Tombol Kembali -->
+      <a
+        href="/#projects"
+        class="inline-flex items-center gap-2 text-xs font-mono text-slate-400 hover:text-sky-400 transition-colors mb-6 group"
+      >
+        <span class="group-hover:-translate-x-1 transition-transform">←</span>
+        <span>Kembali ke Beranda</span>
+      </a>
+
+      <!-- Kartu Detail Proyek -->
+      <article class="rounded-2xl border border-slate-800 bg-[#0B0F17] overflow-hidden shadow-2xl">
+        
+        <!-- Gambar / Slider Proyek Interaktif -->
+        {imageList.length > 0 && (
+          <div class="relative w-full bg-[#070A10] border-b border-slate-800 overflow-hidden select-none" id="project-slider">
+            
+            <!-- Slides Container -->
+            <div class="relative w-full min-h-[280px] sm:min-h-[400px] flex items-center justify-center p-2 sm:p-5">
+              {imageList.map((item, idx) => (
+                <div
+                  class={`project-slide transition-all duration-300 w-full flex flex-col items-center justify-center ${idx === 0 ? 'block opacity-100' : 'hidden opacity-0'}`}
+                  data-index={idx}
+                >
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    width="1024"
+                    height="576"
+                    loading={idx === 0 ? "eager" : "lazy"}
+                    class="w-full max-h-[500px] object-contain rounded-lg shadow-xl border border-slate-800/80"
+                  />
+                  {item.title && (
+                    <div class="mt-3 px-3 py-1 rounded-full bg-slate-900/90 border border-slate-800 text-xs font-mono text-slate-300 shadow-sm text-center">
+                      {item.title}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <!-- Tombol Navigasi Slide (Hanya jika > 1 gambar) -->
+            {imageList.length > 1 && (
+              <>
+                <!-- Tombol Prev -->
+                <button
+                  type="button"
+                  id="slide-prev"
+                  aria-label="Gambar Sebelumnya"
+                  class="absolute left-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 text-white hover:text-sky-400 transition-all shadow-xl cursor-pointer focus:outline-none"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                  </svg>
+                </button>
+
+                <!-- Tombol Next -->
+                <button
+                  type="button"
+                  id="slide-next"
+                  aria-label="Gambar Selanjutnya"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 rounded-full bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 text-white hover:text-sky-400 transition-all shadow-xl cursor-pointer focus:outline-none"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </button>
+
+                <!-- Indikator Posisi Slide (Pill Dots) -->
+                <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-950/80 border border-slate-800 backdrop-blur-sm shadow-md">
+                  {imageList.map((_, idx) => (
+                    <button
+                      type="button"
+                      class={`slide-dot h-2 rounded-full transition-all cursor-pointer ${idx === 0 ? 'bg-sky-400 w-5' : 'bg-slate-600 hover:bg-slate-400 w-2'}`}
+                      data-target-index={idx}
+                      aria-label={`Buka slide ${idx + 1}`}
+                    ></button>
+                  ))}
+                  <span id="slide-counter" class="text-[10px] font-mono text-slate-400 ml-1.5">
+                    1 / {imageList.length}
+                  </span>
+                </div>
+              </>
+            )}
+
+          </div>
+        )}
+
+        <!-- Header Info Proyek -->
+        <div class="p-6 sm:p-8 space-y-6">
+          
+          <div class="space-y-3">
+            <div class="flex items-center justify-between gap-3 flex-wrap">
+              <span class="text-xs font-mono text-sky-400 font-medium">
+                {category}
+              </span>
+              {company ? (
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/25 text-xs font-mono font-medium">
+                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                    <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
+                  </svg>
+                  <span>Proyek Produksi • {company}</span>
+                </div>
+              ) : (
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/80 text-slate-400 border border-slate-700/60 text-xs font-mono">
+                  <span>Personal Project</span>
+                </div>
+              )}
+            </div>
+
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-snug">
+              {title}
+            </h1>
+
+            {company && (
+              <div class="flex flex-wrap items-center gap-x-6 gap-y-2 py-3 px-4 rounded-xl bg-slate-900/60 border border-slate-800 text-xs text-slate-300 font-mono">
+                <div>
+                  <span class="text-slate-500">Perusahaan:</span> <span class="text-white font-medium">{company}</span>
+                </div>
+                {role && (
+                  <div>
+                    <span class="text-slate-500">Peran:</span> <span class="text-sky-300 font-medium">{role}</span>
+                  </div>
+                )}
+                {projectType && (
+                  <div>
+                    <span class="text-slate-500">Tipe:</span> <span class="text-emerald-400 font-medium">{projectType}</span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <!-- Deskripsi Pengantar -->
+          <p class="text-base text-slate-300 leading-relaxed">
+            {description}
+          </p>
+
+          <!-- Tumpukan Teknologi -->
+          <div class="space-y-2 pt-2">
+            <span class="text-xs font-mono text-slate-500 uppercase tracking-wider block">Teknologi yang Digunakan:</span>
+            <div class="flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <span class="px-2.5 py-1 text-xs font-mono rounded bg-slate-900 text-slate-200 border border-slate-700">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <!-- Tombol Aksi GitHub -->
+          <div class="pt-4 border-t border-slate-800 flex items-center justify-between gap-4 flex-wrap">
+            <a
+              href={githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-sm shadow-[0_0_20px_rgba(56,189,248,0.3)] transition-all"
+            >
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+              <span>Buka Repository di GitHub</span>
+              <span class="text-xs">↗</span>
+            </a>
+
+            <a
+              href="/#projects"
+              class="text-xs font-mono text-slate-400 hover:text-white transition-colors"
+            >
+              ← Kembali ke Daftar Proyek
+            </a>
+          </div>
+
+          <!-- DOKUMENTASI LENGKAP DARI MARKDOWN -->
+          <div class="pt-8 border-t border-slate-800 project-body">
+            <Content />
+          </div>
+
+        </div>
+
+      </article>
+
+    </div>
+  </div>
+</MainLayout>
+
+<style is:global>
+  .project-body h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-top: 2.25rem;
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid rgba(51, 65, 85, 0.6);
+    letter-spacing: -0.015em;
+  }
+  .project-body h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #38bdf8;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .project-body p {
+    margin-bottom: 1rem;
+    color: #cbd5e1;
+    line-height: 1.8;
+  }
+  .project-body ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 1.25rem;
+    color: #cbd5e1;
+  }
+  .project-body li {
+    margin-bottom: 0.5rem;
+    line-height: 1.65;
+  }
+  .project-body strong {
+    color: #f8fafc;
+    font-weight: 600;
+  }
+  .project-body hr {
+    border-color: rgba(51, 65, 85, 0.5);
+    margin: 2rem 0;
+  }
+  .project-body a {
+    color: #38bdf8;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .project-body a:hover {
+    color: #7dd3fc;
+  }
+  .project-body code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85em;
+    background-color: #0f172a;
+    padding: 0.15rem 0.4rem;
+    border-radius: 0.25rem;
+    border: 1px solid #1e293b;
+    color: #38bdf8;
+  }
+</style>
+
+<script>
+  function setupSlider() {
+    const slides = document.querySelectorAll<HTMLElement>('.project-slide');
+    const dots = document.querySelectorAll<HTMLButtonElement>('.slide-dot');
+    const prevBtn = document.getElementById('slide-prev');
+    const nextBtn = document.getElementById('slide-next');
+    const counter = document.getElementById('slide-counter');
+
+    if (slides.length <= 1) return;
+
+    let currentIndex = 0;
+    const totalSlides = slides.length;
+
+    function showSlide(index: number) {
+      if (index < 0) index = totalSlides - 1;
+      if (index >= totalSlides) index = 0;
+      currentIndex = index;
+
+      slides.forEach((slide, idx) => {
+        if (idx === currentIndex) {
+          slide.classList.remove('hidden', 'opacity-0');
+          slide.classList.add('block', 'opacity-100');
+        } else {
+          slide.classList.add('hidden', 'opacity-0');
+          slide.classList.remove('block', 'opacity-100');
+        }
+      });
+
+      dots.forEach((dot, idx) => {
+        if (idx === currentIndex) {
+          dot.classList.add('bg-sky-400', 'w-5');
+          dot.classList.remove('bg-slate-600', 'w-2');
+        } else {
+          dot.classList.remove('bg-sky-400', 'w-5');
+          dot.classList.add('bg-slate-600', 'w-2');
+        }
+      });
+
+      if (counter) {
+        counter.textContent = `${currentIndex + 1} / ${totalSlides}`;
+      }
+    }
+
+    prevBtn?.addEventListener('click', () => showSlide(currentIndex - 1));
+    nextBtn?.addEventListener('click', () => showSlide(currentIndex + 1));
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        const target = Number(dot.getAttribute('data-target-index') || 0);
+        showSlide(target);
+      });
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') showSlide(currentIndex - 1);
+      if (e.key === 'ArrowRight') showSlide(currentIndex + 1);
+    });
+  }
+
+  // Jalankan setup slider saat DOM ready
+  setupSlider();
+  document.addEventListener('astro:page-load', setupSlider);
+</script>
