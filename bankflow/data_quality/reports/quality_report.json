@@ -1,0 +1,179 @@
+{
+    "generated_at": "2026-11-12T06:49:17.361684+00:00",
+    "overall_status": "PASS",
+    "summary": {
+        "total_checks": 28,
+        "passed": 28,
+        "failed": 0
+    },
+    "checks": [
+        {
+            "check_name": "branch_required_columns",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Missing columns: []"
+        },
+        {
+            "check_name": "branch_required_fields",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Required fields must not be null or empty"
+        },
+        {
+            "check_name": "unique_branch_id",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "branch_id must be unique"
+        },
+        {
+            "check_name": "customer_required_columns",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Missing columns: []"
+        },
+        {
+            "check_name": "customer_required_fields",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Required fields must not be null or empty"
+        },
+        {
+            "check_name": "unique_customer_id",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "customer_id must be unique"
+        },
+        {
+            "check_name": "valid_customer_gender",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Gender must be M or F"
+        },
+        {
+            "check_name": "valid_customer_segment",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Customer segment must be REGULAR, PREMIUM, or PRIORITY"
+        },
+        {
+            "check_name": "valid_customer_registration_date",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Registration date must be valid"
+        },
+        {
+            "check_name": "account_required_columns",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Missing columns: []"
+        },
+        {
+            "check_name": "account_required_fields",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Required fields must not be null or empty"
+        },
+        {
+            "check_name": "unique_account_id",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "account_id must be unique"
+        },
+        {
+            "check_name": "valid_account_type",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Account type must be SAVINGS, CURRENT, or PAYROLL"
+        },
+        {
+            "check_name": "valid_account_status",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Account status must be ACTIVE or INACTIVE"
+        },
+        {
+            "check_name": "valid_account_opening_balance",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Opening balance must be numeric and non-negative"
+        },
+        {
+            "check_name": "transaction_required_columns",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Missing columns: []"
+        },
+        {
+            "check_name": "transaction_required_fields",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Required fields must not be null or empty"
+        },
+        {
+            "check_name": "unique_transaction_id",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "transaction_id must be unique"
+        },
+        {
+            "check_name": "valid_transaction_amount",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Transaction amount must be numeric and greater than zero"
+        },
+        {
+            "check_name": "valid_transaction_status",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Allowed values: SUCCESS, FAILED, PENDING"
+        },
+        {
+            "check_name": "valid_transaction_type",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Transaction type must be valid"
+        },
+        {
+            "check_name": "valid_transaction_channel",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Transaction channel must be valid"
+        },
+        {
+            "check_name": "valid_transaction_date",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Transaction date must be valid"
+        },
+        {
+            "check_name": "account_customer_reference",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Every account must reference an existing customer"
+        },
+        {
+            "check_name": "account_branch_reference",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Every account must reference an existing branch"
+        },
+        {
+            "check_name": "transaction_account_reference",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Every transaction must reference an existing account"
+        },
+        {
+            "check_name": "transaction_customer_account_consistency",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Transaction customer must match account ownership"
+        },
+        {
+            "check_name": "transaction_branch_account_consistency",
+            "status": "PASS",
+            "failed_records": 0,
+            "details": "Transaction branch must match account branch"
+        }
+    ]
+}

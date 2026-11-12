@@ -1,0 +1,146 @@
+
+x-airflow-common: &airflow-common
+  build:
+    context: .
+    dockerfile: airflow/Dockerfile
+  environment: &airflow-common-env
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow_user:${AIRFLOW_DB_PASSWORD}@postgres:5432/airflow_metadata
+    AIRFLOW__CORE__FERNET_KEY: ${AIRFLOW_FERNET_KEY}
+    AIRFLOW__WEBSERVER__SECRET_KEY: ${AIRFLOW_SECRET_KEY}
+
+    S3_ENDPOINT_URL: http://object-storage:8333
+    AWS_ACCESS_KEY_ID: ${S3_ACCESS_KEY}
+    AWS_SECRET_ACCESS_KEY: ${S3_SECRET_KEY}
+    AWS_DEFAULT_REGION: us-east-1
+    S3_BUCKET: bankflow-lake
+
+    POSTGRES_HOST: postgres
+    POSTGRES_PORT: "5432"
+    POSTGRES_DB: bankflow_dw
+    POSTGRES_USER: bankflow_user
+    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+  volumes:
+    - ./airflow/dags:/opt/airflow/dags
+    - ./airflow/logs:/opt/airflow/logs
+    - ./airflow/plugins:/opt/airflow/plugins
+    - ./ingestion:/opt/airflow/project/ingestion
+    - ./processing:/opt/airflow/project/processing
+    - ./data_quality:/opt/airflow/project/data_quality
+    - ./warehouse:/opt/airflow/project/warehouse
+    - ./data:/opt/airflow/project/data
+
+  user: "${AIRFLOW_UID:-50000}:0"
+  depends_on:
+    - postgres
+    - object-storage
+
+services:
+  object-storage:
+    image: chrislusf/seaweedfs:latest
+    container_name: bankflow-storage
+    restart: unless-stopped
+    ports:
+      - "8333:8333"
+    environment:
+      AWS_ACCESS_KEY_ID: ${S3_ACCESS_KEY}
+      AWS_SECRET_ACCESS_KEY: ${S3_SECRET_KEY}
+      S3_BUCKET: bankflow-lake
+    volumes:
+      - storage_data:/data
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: bankflow-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: bankflow_dw
+      POSTGRES_USER: bankflow_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5437:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  airflow-init:
+    <<: *airflow-common
+    container_name: bankflow-airflow-init
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        airflow db migrate &&
+        airflow users create \
+          --username ${AIRFLOW_API_USER} \
+          --password ${AIRFLOW_API_PASSWORD} \
+          --firstname BankFlow \
+          --lastname Admin \
+          --role Admin \
+          --email admin@bankflow.local
+    restart: "no"
+
+  airflow-webserver:
+    <<: *airflow-common
+    container_name: bankflow-airflow-webserver
+    command: webserver
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+
+  airflow-scheduler:
+    <<: *airflow-common
+    container_name: bankflow-airflow-scheduler
+    command: scheduler
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: bankflow-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: bankflow_dw
+      POSTGRES_USER: bankflow_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+      AIRFLOW_DB_HOST: postgres
+      AIRFLOW_DB_PORT: "5432"
+      AIRFLOW_DB_NAME: airflow_metadata
+      AIRFLOW_DB_USER: airflow_user
+      AIRFLOW_DB_PASSWORD: ${AIRFLOW_DB_PASSWORD}
+
+      AIRFLOW_API_URL: http://airflow-webserver:8080
+      AIRFLOW_API_USER: ${AIRFLOW_API_USER}
+      AIRFLOW_API_PASSWORD: ${AIRFLOW_API_PASSWORD}
+
+      QUALITY_REPORT_PATH: /project/data_quality/reports/quality_report.json
+    volumes:
+      - ./data_quality/reports:/project/data_quality/reports:ro
+    depends_on:
+      - postgres
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: bankflow-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      BACKEND_INTERNAL_URL: http://backend:8000
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    depends_on:
+      - backend
+
+volumes:
+  storage_data:
+  postgres_data:

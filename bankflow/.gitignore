@@ -1,0 +1,55 @@
+
+# =========================
+# Environment & Secrets
+# =========================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# =========================
+# Python
+# =========================
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+
+# =========================
+# Airflow Runtime
+# =========================
+airflow/logs/*
+!airflow/logs/.gitkeep
+
+# =========================
+# Node.js / Next.js
+# =========================
+node_modules/
+.next/
+out/
+
+# =========================
+# Generated Data
+# =========================
+data/generated/*
+data/source/*
+!data/generated/.gitkeep
+!data/source/.gitkeep
+
+# =========================
+# Logs & Temporary Files
+# =========================
+*.log
+*.tmp
+.cache/
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
