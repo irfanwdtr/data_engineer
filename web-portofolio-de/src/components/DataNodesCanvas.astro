@@ -1,17 +1,21 @@
 ---
-// DataNodesCanvas.astro - Matrix Aliran Data & Telemetri Pipeline Data Engineering
+// DataNodesCanvas.astro - Matrix Aliran Data & Telemetri Pipeline Data Engineering Tajam & Jelas
 ---
 
 <div class="absolute inset-0 pointer-events-none overflow-hidden select-none z-0">
-  <!-- Grid Arsitektur Blueprint Halus -->
-  <div class="absolute inset-0 bg-[linear-gradient(to_right,#1e293b15_1px,transparent_1px),linear-gradient(to_bottom,#1e293b15_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
+  <!-- Grid Blueprint Data Tajam -->
+  <div class="absolute inset-0 bg-[linear-gradient(to_right,#38bdf812_1px,transparent_1px),linear-gradient(to_bottom,#38bdf812_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none"></div>
 
-  <!-- Canvas Aliran Data Streams & Telemetri Real-time -->
-  <canvas id="data-matrix-canvas" class="w-full h-full opacity-60"></canvas>
+  <!-- Ambient Glow Spheres (Mewah & Berdimensi) -->
+  <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-sky-500/15 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="absolute bottom-1/3 left-10 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+  <!-- Canvas Aliran Data & Sinyal Pipeline Neon -->
+  <canvas id="data-matrix-canvas" class="w-full h-full"></canvas>
   
-  <!-- Vignette & Gradient Mask agar Teks Headline & Tombol Sangat Kontras & Nyaman Dibaca -->
-  <div class="absolute inset-0 bg-gradient-to-t from-[#090D16] via-transparent to-[#090D16]/70 pointer-events-none"></div>
-  <div class="absolute inset-0 bg-gradient-to-r from-[#090D16]/80 via-transparent to-[#090D16]/60 pointer-events-none"></div>
+  <!-- Subtle Vignette Halus (Hanya di Tepi Luar, Tidak Mengaburkan Animasi Tengah) -->
+  <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#090D16] to-transparent pointer-events-none"></div>
+  <div class="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-[#090D16] to-transparent pointer-events-none"></div>
 </div>
 
 <script>
@@ -27,26 +31,17 @@
     let animationFrameId: number;
     let isVisible = true;
 
-    // Kumpulan Karakter & Token Khas Data Engineering
+    // Kumpulan Token Data Engineering Nyata
     const dataTokens = [
-      // Binary & Bits
-      '0', '1', '0', '1', '1', '0', '1', '0', '1', '1',
-      // Hex Memory & Offsets
-      '0x7F', '0x2A', '0xA4', '0xC1', '0x00', '0xFF',
-      // SQL Keywords
-      'SELECT', 'FROM', 'JOIN', 'WHERE', 'GROUP BY', 'HAVING', 'ORDER BY', 'PARTITION BY', 'OVER()',
-      // Data Types & Formats
-      'INT64', 'VARCHAR', 'TIMESTAMP', 'JSONB', 'BOOLEAN', 'NUMERIC',
-      // Storage & File Formats
-      'PARQUET', 'DELTA', 'SNAPPY', 'AVRO', 'CSV', 'ORC',
-      // Data Engineering Tools & Concepts
-      'AIRFLOW', 'PYSPARK', 'DBT', 'POSTGRES', 'KAFKA', 'AWS_S3', 'GLUE',
-      'STAR_SCHEMA', 'FACT_SALES', 'DIM_CUST', 'STAGING', 'UPSERT',
-      // Live Metrics / Telemetry
-      'ROWS:+42.5K', 'SLA:99.9%', 'LATENCY:12ms', 'PORT:5432', 'STATUS:200'
+      '0101', '1010', '0011', '1100', '0110', '1001',
+      '0x7F', '0x2A', '0xA4', '0xC1', '0xFA', '0x88',
+      'SELECT', 'FROM', 'JOIN', 'WHERE', 'PARTITION', 'OVER()',
+      'PARQUET', 'DELTA', 'SNAPPY', 'AVRO', 'JSONB', 'INT64',
+      'AIRFLOW', 'PYSPARK', 'POSTGRES', 'KAFKA', 'AWS_S3', 'FASTAPI',
+      'MEDALLION', 'BRONZE', 'SILVER', 'GOLD_MART', 'UPSERT',
+      'ROWS:100K', 'SLA:99.9%', 'LATENCY:8ms', 'STATUS:200_OK'
     ];
 
-    // Kolom-kolom stream data
     interface StreamColumn {
       x: number;
       y: number;
@@ -55,24 +50,32 @@
       chars: string[];
       changeCounter: number;
       fontSize: number;
-      isHighlighted: boolean;
+      accent: 'cyan' | 'emerald' | 'amber';
     }
 
-    // Paket data horizontal yang bergerak di jalur pipeline
-    interface PipelineTrack {
-      y: number;
+    interface CircuitBeam {
       x: number;
+      y: number;
+      length: number;
       speed: number;
       label: string;
       color: string;
     }
 
     let columns: StreamColumn[] = [];
-    let horizontalPipes: PipelineTrack[] = [];
-    const mouse = { x: -1000, y: -1000, radius: 140 };
+    let circuitBeams: CircuitBeam[] = [];
+    const mouse = { x: -1000, y: -1000, radius: 120 };
 
     function getRandomToken() {
       return dataTokens[Math.floor(Math.random() * dataTokens.length)];
+    }
+
+    function getTextZoneBounds() {
+      const containerMax = 1024; // max-w-5xl
+      const containerLeft = Math.max(16, (width - containerMax) / 2);
+      const textZoneStart = containerLeft + 16;
+      const textZoneEnd = width >= 1024 ? (containerLeft + 580) : (width >= 768 ? (containerLeft + 420) : width - 32);
+      return { containerLeft, textZoneStart, textZoneEnd };
     }
 
     function resize() {
@@ -87,80 +90,97 @@
       ctx?.scale(dpr, dpr);
     }
 
-    function initColumns() {
+    function initElements() {
       columns = [];
-      horizontalPipes = [];
+      circuitBeams = [];
 
-      const colSpacing = width < 640 ? 42 : 36;
+      const { textZoneStart, textZoneEnd } = getTextZoneBounds();
+
+      // Spasi antar kolom teratur agar rapi dan tidak berantakan
+      const colSpacing = width < 640 ? 64 : 52;
       const colCount = Math.floor(width / colSpacing);
 
       for (let i = 0; i < colCount; i++) {
-        const streamLength = Math.floor(Math.random() * 12) + 8;
+        const colX = i * colSpacing + 20;
+
+        // SMART EXCLUSION ZONE:
+        // Jangan spawn kolom matrix di area bacaan teks hero (kolom kiri) agar teks 100% bersih & nyaman dibaca!
+        if (width >= 640) {
+          if (colX >= textZoneStart && colX <= textZoneEnd) {
+            continue; // Skip: biarkan zona teks bacaan bersih dan tenang
+          }
+        } else {
+          // Pada mobile: hanya letakkan kolom di margin tepi terluar
+          if (colX > 36 && colX < width - 36) {
+            continue;
+          }
+        }
+
+        const streamLength = Math.floor(Math.random() * 8) + 6;
         const chars: string[] = [];
         for (let j = 0; j < streamLength; j++) {
           chars.push(getRandomToken());
         }
 
+        const rand = Math.random();
+        const accent = rand > 0.75 ? 'emerald' : rand > 0.55 ? 'amber' : 'cyan';
+
         columns.push({
-          x: i * colSpacing + Math.random() * 8,
-          y: Math.random() * -height * 1.2,
+          x: colX,
+          y: Math.random() * -height * 1.5,
           speed: Math.random() * 0.75 + 0.45,
           length: streamLength,
           chars,
           changeCounter: 0,
-          fontSize: Math.random() > 0.85 ? 11 : 9.5,
-          isHighlighted: false
+          fontSize: 10.5,
+          accent
         });
       }
 
-      // 3 Jalur Pipeline Horizontal (Simulasi Aliran Data Pipeline)
-      const pipeLabels = [
-        'INGESTION_STREAM_01: 24,800 msg/s',
-        'DELTA_LAKEHOUSE_PIPELINE: SNAPPY_PARQUET',
-        'AIRFLOW_DAG_SCHEDULER: RUNNING [SLA OK]'
+      // 4 Berkas Sinar Laser Horizontal (Data Pipeline Stream)
+      const beamLabels = [
+        'PIPELINE_STREAM::AIRFLOW_ORCHESTRATOR [OK]',
+        'MEDALLION_LAKEHOUSE::BRONZE_TO_SILVER',
+        'REALTIME_INGESTION::KAFKA_CLUSTER [45K_MSG/S]',
+        'POSTGRESQL_WAREHOUSE::QUERY_LATENCY [12ms]'
       ];
 
-      for (let k = 0; k < 3; k++) {
-        horizontalPipes.push({
-          y: (height * 0.25) + (k * height * 0.28),
+      for (let k = 0; k < 4; k++) {
+        circuitBeams.push({
+          y: 52 * (k * 3 + 2),
           x: Math.random() * -width,
-          speed: (k + 1) * 0.6 + 0.3,
-          label: pipeLabels[k],
-          color: k === 0 ? '#38BDF8' : k === 1 ? '#34D399' : '#A78BFA'
+          length: Math.random() * 140 + 120,
+          speed: (k + 1) * 0.7 + 0.5,
+          label: beamLabels[k],
+          color: k % 2 === 0 ? '#38BDF8' : '#34D399'
         });
       }
     }
 
     function update() {
-      // 1. Update Kolom Stream Data Vertikal
+      // 1. Update Kolom Data Vertikal
       for (let i = 0; i < columns.length; i++) {
         const col = columns[i];
         col.y += col.speed;
 
-        // Acak pergantian karakter sesekali agar terasa live data stream
         col.changeCounter++;
-        if (col.changeCounter > 15) {
+        if (col.changeCounter > 12) {
           col.changeCounter = 0;
           const randomIdx = Math.floor(Math.random() * col.chars.length);
           col.chars[randomIdx] = getRandomToken();
         }
 
-        // Efek kursor mouse mendekati kolom
-        const distToMouse = Math.abs(col.x - mouse.x);
-        col.isHighlighted = distToMouse < mouse.radius && mouse.y > col.y && mouse.y < (col.y + col.length * 20);
-
-        // Reset ke atas saat melewati batas bawah
-        if (col.y > height + (col.length * 22)) {
-          col.y = Math.random() * -120 - 40;
-          col.speed = Math.random() * 0.75 + 0.45;
+        if (col.y > height + (col.length * 24)) {
+          col.y = Math.random() * -150 - 50;
+          col.speed = Math.random() * 0.9 + 0.6;
         }
       }
 
-      // 2. Update Jalur Pipeline Horizontal
-      for (const pipe of horizontalPipes) {
-        pipe.x += pipe.speed;
-        if (pipe.x > width + 250) {
-          pipe.x = -350;
+      // 2. Update Berkas Sinar Laser Horizontal
+      for (const beam of circuitBeams) {
+        beam.x += beam.speed;
+        if (beam.x > width + 400) {
+          beam.x = -450;
         }
       }
     }
@@ -169,89 +189,101 @@
       if (!ctx) return;
       ctx.clearRect(0, 0, width, height);
 
-      // 1. Gambar Jalur Pipeline Horizontal (Circuit Data Wire)
-      for (const pipe of horizontalPipes) {
-        // Garis jalur redup
+      // 1. Gambar Jalur Rel Sirkuit Horizontal & Laser Pulses
+      for (const beam of circuitBeams) {
+        // Rel tipis cyan/slate
         ctx.beginPath();
-        ctx.moveTo(0, pipe.y);
-        ctx.lineTo(width, pipe.y);
-        ctx.strokeStyle = 'rgba(30, 41, 59, 0.45)';
+        ctx.moveTo(0, beam.y);
+        ctx.lineTo(width, beam.y);
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.15)';
         ctx.lineWidth = 1;
-        ctx.setLineDash([4, 6]);
+        ctx.setLineDash([8, 12]);
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Paket data yang meluncur di atas garis
-        ctx.font = '500 9px "JetBrains Mono", monospace';
-        ctx.fillStyle = pipe.color;
-        ctx.shadowColor = pipe.color;
-        ctx.shadowBlur = 6;
-        ctx.fillText(`▶ [${pipe.label}]`, pipe.x, pipe.y - 4);
+        // Kepala Laser Bercahaya Terang
+        const gradient = ctx.createLinearGradient(beam.x, beam.y, beam.x - beam.length, beam.y);
+        gradient.addColorStop(0, beam.color);
+        gradient.addColorStop(0.3, beam.color + '88');
+        gradient.addColorStop(1, 'transparent');
 
-        // Titik laser di depan teks
         ctx.beginPath();
-        ctx.arc(pipe.x - 6, pipe.y, 2, 0, Math.PI * 2);
+        ctx.moveTo(beam.x - beam.length, beam.y);
+        ctx.lineTo(beam.x, beam.y);
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 2;
+        ctx.shadowColor = beam.color;
+        ctx.shadowBlur = 10;
+        ctx.stroke();
+
+        // Titik Laser Head
+        ctx.beginPath();
+        ctx.arc(beam.x, beam.y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.shadowColor = beam.color;
+        ctx.shadowBlur = 12;
         ctx.fill();
+
+        // Label Telemetri di Atas Laser
+        ctx.font = '600 9.5px "JetBrains Mono", monospace';
+        ctx.fillStyle = beam.color;
+        ctx.shadowBlur = 6;
+        ctx.fillText(`▶ ${beam.label}`, beam.x - beam.length + 10, beam.y - 6);
         ctx.shadowBlur = 0;
       }
 
-      // 2. Gambar Stream Data Vertikal (Data Rain)
+      const { textZoneStart, textZoneEnd } = getTextZoneBounds();
+      const isMouseInTextZone = (width >= 640)
+        ? (mouse.x >= textZoneStart - 40 && mouse.x <= textZoneEnd + 40 && mouse.y >= 20 && mouse.y <= height * 0.95)
+        : (mouse.x >= 10 && mouse.x <= width - 10 && mouse.y >= 20 && mouse.y <= height * 0.95);
+
+      // 2. Gambar Aliran Data Matrix Vertikal Tajam (Di Luar Zona Teks Bacaan)
       for (let i = 0; i < columns.length; i++) {
         const col = columns[i];
-        const stepY = col.fontSize + 8;
+        const stepY = col.fontSize + 10;
 
         for (let j = 0; j < col.length; j++) {
           const charY = col.y + (j * stepY);
-          if (charY < -20 || charY > height + 20) continue;
+          if (charY < -30 || charY > height + 30) continue;
 
           const text = col.chars[j];
-          const isHead = (j === col.length - 1); // Karakter paling depan/bawah
-          const progress = j / col.length; // Posisi dari ekor (0) ke kepala (1)
+          const isHead = (j === col.length - 1);
+          const progress = j / col.length; // Dari ekor (0) ke kepala (1)
 
-          ctx.font = `${isHead ? '600' : '400'} ${col.fontSize}px "JetBrains Mono", monospace`;
+          // Cek jarak kursor mouse untuk interaktivitas lembut (hanya di luar area bacaan teks)
+          const distMouse = Math.hypot(col.x - mouse.x, charY - mouse.y);
+          const isNearMouse = !isMouseInTextZone && distMouse < mouse.radius;
 
-          if (col.isHighlighted) {
-            // Jika tersorot kursor mouse: bercahaya kuat
-            ctx.fillStyle = isHead ? '#FFFFFF' : '#38BDF8';
+          ctx.font = `${isHead ? '700' : '500'} ${col.fontSize}px "JetBrains Mono", monospace`;
+
+          if (isNearMouse) {
+            // Ketika kursor mendekat di area luar teks: berpendar cyan/emerald halus & proporsional
+            ctx.fillStyle = col.accent === 'emerald' ? '#6EE7B7' : '#7DD3FC';
             ctx.shadowColor = '#38BDF8';
-            ctx.shadowBlur = isHead ? 8 : 4;
+            ctx.shadowBlur = 8;
           } else if (isHead) {
-            // Kepala stream: putih / cyan terang
-            ctx.fillStyle = text.startsWith('0') || text.startsWith('1') ? '#38BDF8' : '#F8FAFC';
-            ctx.shadowColor = '#38BDF8';
-            ctx.shadowBlur = 5;
+            // Kepala Karakter: Bersinar kontras rapi tanpa menyilaukan
+            ctx.fillStyle = col.accent === 'emerald' ? '#6EE7B7' : col.accent === 'amber' ? '#FDE68A' : '#BAE6FD';
+            ctx.shadowColor = col.accent === 'emerald' ? '#34D399' : '#38BDF8';
+            ctx.shadowBlur = 6;
           } else {
-            // Tubuh stream: memudar halus ke atas
-            const alpha = Math.max(0.08, progress * 0.45);
-            
-            if (text === 'SELECT' || text === 'FROM' || text === 'DELTA' || text === 'PARQUET' || text === 'PYSPARK' || text === 'AIRFLOW') {
-              ctx.fillStyle = `rgba(56, 189, 248, ${alpha * 1.4})`; // Aksen Sky
-            } else if (text.startsWith('ROWS:') || text.startsWith('SLA:') || text === 'INT64' || text === 'FACT_SALES') {
-              ctx.fillStyle = `rgba(52, 211, 153, ${alpha * 1.3})`; // Aksen Emerald
+            // Tubuh Aliran: Elegan & Berkelas (tidak menenggelamkan teks foreground)
+            const alpha = Math.max(0.12, progress * 0.55);
+
+            if (col.accent === 'emerald') {
+              ctx.fillStyle = `rgba(52, 211, 153, ${alpha})`;
+            } else if (col.accent === 'amber') {
+              ctx.fillStyle = `rgba(251, 191, 36, ${alpha})`;
             } else {
-              ctx.fillStyle = `rgba(148, 163, 184, ${alpha})`; // Slate
+              ctx.fillStyle = `rgba(56, 189, 248, ${alpha})`;
             }
-            ctx.shadowBlur = 0;
+            ctx.shadowBlur = progress > 0.7 ? 3 : 0;
+            ctx.shadowColor = '#38BDF8';
           }
 
           ctx.fillText(text, col.x, charY);
           ctx.shadowBlur = 0;
         }
-      }
-
-      // 3. Lingkaran Sensor Radar Kursor Mouse
-      if (mouse.x > 0 && mouse.y > 0) {
-        ctx.beginPath();
-        ctx.arc(mouse.x, mouse.y, 45, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
-        ctx.lineWidth = 1;
-        ctx.setLineDash([3, 3]);
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        ctx.font = '500 8.5px "JetBrains Mono", monospace';
-        ctx.fillStyle = 'rgba(56, 189, 248, 0.5)';
-        ctx.fillText(`DATA_HUB [${Math.floor(mouse.x)}, ${Math.floor(mouse.y)}]`, mouse.x + 8, mouse.y - 8);
       }
     }
 
@@ -277,7 +309,7 @@
 
     window.addEventListener('resize', () => {
       resize();
-      initColumns();
+      initElements();
     });
 
     window.addEventListener('mousemove', onMouseMove);
@@ -297,7 +329,7 @@
     }
 
     resize();
-    initColumns();
+    initElements();
     loop();
 
     document.addEventListener('astro:before-swap', () => {
