@@ -165,14 +165,19 @@ export const skillCategories: SkillCategory[] = [
         description: "Pemodelan data relasional, kalkulasi formula DAX kompleks, laporan KPI interaktif, dan automated refresh."
       },
       {
-        name: "Looker Studio",
+        name: "Metabase",
         category: "business_intelligence",
-        description: "Penyusunan dashboard pelaporan visual berbasis cloud yang mudah dibagikan kepada stakeholder."
+        description: "Query SQL analitik, dashboard operasional real-time, visual query builder, dan tracking KPI bisnis."
       },
       {
         name: "Tableau (Basic)",
         category: "business_intelligence",
         description: "Visualisasi data analitik, eksplorasi pola visual, dan pembuatan grafik interaktif bisnis."
+      },
+      {
+        name: "Looker Studio",
+        category: "business_intelligence",
+        description: "Penyusunan dashboard pelaporan visual berbasis cloud yang mudah dibagikan kepada stakeholder."
       },
       {
         name: "Microsoft Excel",
